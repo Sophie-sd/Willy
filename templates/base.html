@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}WILLI — ZOO МАГАЗИН у Києві{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}ZOO МАГАЗИН WILLI — корм, іграшки та аксесуари для котів, собак, птахів і гризунів. Доставка по Україні.{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/mega-menu.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/product-card.css' %}">
+  {% block extra_css %}{% endblock %}
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+</head>
+<body>
+  <div class="site-top">
+    {% include 'partials/promo_strip.html' %}
+    {% include 'partials/header.html' %}
+  </div>
+
+  <main class="page-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'partials/footer.html' %}
+  {% include 'partials/cookie_banner.html' %}
+
+  <script src="{% static 'js/main.js' %}" defer></script>
+  <script src="{% static 'js/mega-menu.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

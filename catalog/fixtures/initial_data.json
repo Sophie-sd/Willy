@@ -1,0 +1,37 @@
+[
+  {"model": "catalog.animalcategory", "pk": 1, "fields": {"name": "Коти", "slug": "cats", "image": "", "order": 1, "is_active": true}},
+  {"model": "catalog.animalcategory", "pk": 2, "fields": {"name": "Собаки", "slug": "dogs", "image": "", "order": 2, "is_active": true}},
+  {"model": "catalog.animalcategory", "pk": 3, "fields": {"name": "Птахи", "slug": "birds", "image": "", "order": 3, "is_active": true}},
+  {"model": "catalog.animalcategory", "pk": 4, "fields": {"name": "Гризуни", "slug": "rodents", "image": "", "order": 4, "is_active": true}},
+
+  {"model": "catalog.subcategory", "pk": 1, "fields": {"category": 1, "name": "Корм", "slug": "food", "order": 1, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 2, "fields": {"category": 1, "name": "Іграшки", "slug": "toys", "order": 2, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 3, "fields": {"category": 1, "name": "Аксесуари", "slug": "accessories", "order": 3, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 4, "fields": {"category": 1, "name": "Наповнювач", "slug": "litter", "order": 4, "is_active": true}},
+
+  {"model": "catalog.subcategory", "pk": 5, "fields": {"category": 2, "name": "Корм", "slug": "food", "order": 1, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 6, "fields": {"category": 2, "name": "Іграшки", "slug": "toys", "order": 2, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 7, "fields": {"category": 2, "name": "Нашийники та повідці", "slug": "leashes", "order": 3, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 8, "fields": {"category": 2, "name": "Лежаки", "slug": "beds", "order": 4, "is_active": true}},
+
+  {"model": "catalog.subcategory", "pk": 9, "fields": {"category": 3, "name": "Корм", "slug": "food", "order": 1, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 10, "fields": {"category": 3, "name": "Іграшки", "slug": "toys", "order": 2, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 11, "fields": {"category": 3, "name": "Клітки", "slug": "cages", "order": 3, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 12, "fields": {"category": 3, "name": "Аксесуари", "slug": "accessories", "order": 4, "is_active": true}},
+
+  {"model": "catalog.subcategory", "pk": 13, "fields": {"category": 4, "name": "Корм", "slug": "food", "order": 1, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 14, "fields": {"category": 4, "name": "Іграшки", "slug": "toys", "order": 2, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 15, "fields": {"category": 4, "name": "Клітки", "slug": "cages", "order": 3, "is_active": true}},
+  {"model": "catalog.subcategory", "pk": 16, "fields": {"category": 4, "name": "Аксесуари", "slug": "accessories", "order": 4, "is_active": true}},
+
+  {"model": "catalog.product", "pk": 1, "fields": {"name": "Royal Canin Mini Adult", "slug": "royal-canin-mini-adult", "category": 2, "subcategory": 5, "price": "299.00", "old_price": "389.00", "is_on_sale": true, "is_available": true, "description": "Повнораціонний корм для дорослих собак малих порід.", "image": "", "is_featured": true, "created_at": "2026-01-15T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 2, "fields": {"name": "Whiskas з лососем", "slug": "whiskas-losos", "category": 1, "subcategory": 1, "price": "89.00", "old_price": "119.00", "is_on_sale": true, "is_available": true, "description": "Вологий корм для котів з лососем.", "image": "", "is_featured": true, "created_at": "2026-01-14T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 3, "fields": {"name": "Іграшка-канат для собак", "slug": "igrashka-kanat-dogs", "category": 2, "subcategory": 6, "price": "149.00", "old_price": "199.00", "is_on_sale": true, "is_available": true, "description": "Міцна іграшка-канат для активних ігор.", "image": "", "is_featured": false, "created_at": "2026-01-13T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 5, "fields": {"name": "Корм для хом'яка Vitakraft", "slug": "vitakraft-homyak", "category": 4, "subcategory": 13, "price": "95.00", "old_price": "125.00", "is_on_sale": true, "is_available": true, "description": "Збалансований корм для хом'яків.", "image": "", "is_featured": false, "created_at": "2026-01-11T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 6, "fields": {"name": "Pro Plan для котів", "slug": "pro-plan-cats", "category": 1, "subcategory": 1, "price": "420.00", "old_price": null, "is_on_sale": false, "is_available": true, "description": "Преміальний сухий корм для котів.", "image": "", "is_featured": true, "created_at": "2026-01-10T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 8, "fields": {"name": "Лежак м'який для собак", "slug": "lezhak-myakyi", "category": 2, "subcategory": 8, "price": "650.00", "old_price": "799.00", "is_on_sale": true, "is_available": true, "description": "Зручний лежак з знімним чохлом.", "image": "", "is_featured": false, "created_at": "2026-01-08T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 13, "fields": {"name": "Hills Science Plan Dog", "slug": "hills-science-dog", "category": 2, "subcategory": 5, "price": "520.00", "old_price": null, "is_on_sale": false, "is_available": true, "description": "Корм для собак середніх порід.", "image": "", "is_featured": false, "created_at": "2026-01-03T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 14, "fields": {"name": "Дзеркало для птахів", "slug": "dzerkalo-ptahy", "category": 3, "subcategory": 12, "price": "45.00", "old_price": null, "is_on_sale": false, "is_available": true, "description": "Безпечне дзеркало для птахів.", "image": "", "is_featured": false, "created_at": "2026-01-02T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 15, "fields": {"name": "Колесо для гризуна", "slug": "koleso-gryzun", "category": 4, "subcategory": 14, "price": "120.00", "old_price": "150.00", "is_on_sale": true, "is_available": true, "description": "Тихе бігове колесо для хом'яків.", "image": "", "is_featured": false, "created_at": "2026-01-01T10:00:00Z"}},
+  {"model": "catalog.product", "pk": 16, "fields": {"name": "Нашийник шкіряний", "slug": "nashynnyk-shkiryany", "category": 2, "subcategory": 7, "price": "230.00", "old_price": null, "is_on_sale": false, "is_available": true, "description": "Шкіряний нашийник з металевою пряжкою.", "image": "", "is_featured": false, "created_at": "2025-12-30T10:00:00Z"}}
+]

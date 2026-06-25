@@ -1,0 +1,53 @@
+{% load static %}
+<footer class="footer" id="site-footer">
+  <div class="footer__media" aria-hidden="true">
+    <img
+      src="{% static 'images/footer/footer-bg.png' %}"
+      alt=""
+      width="1024"
+      height="683"
+      loading="lazy"
+      decoding="async"
+    >
+  </div>
+  <div class="footer__glass" aria-hidden="true"></div>
+
+  <div class="container footer__content">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="{% url 'home' %}" class="footer__logo" aria-label="WILLI — головна">
+          <img
+            src="{% static 'images/logo-willi.png' %}"
+            alt="WILLI — ZOO МАГАЗИН"
+            class="footer__logo-img"
+            width="640"
+            height="175"
+          >
+        </a>
+        <p class="footer__tagline">ZOO МАГАЗИН у Києві</p>
+        <p class="footer__desc">Корм, іграшки та аксесуари для ваших улюбленців.</p>
+        <a href="{% url 'contacts' %}" class="footer__address">{{ site_contacts.address }}</a>
+      </div>
+
+      <p class="footer__hours">{{ site_contacts.hours }}</p>
+
+      <div class="footer__contacts">
+        <div class="footer__col-title">Контакти</div>
+        <a href="tel:{{ site_contacts.phone_href }}" class="footer__link">{{ site_contacts.phone }}</a>
+        <a href="mailto:{{ site_contacts.email }}" class="footer__link">{{ site_contacts.email }}</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© {% now "Y" %} {{ site_contacts.name }}</span>
+      <p class="footer__credit">
+        Зроблено командою
+        <a
+          href="https://www.prometeylabs.com/"
+          class="footer__credit-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >PrometeyLabs</a>
+      </p>
+    </div>
+  </div>
+</footer>

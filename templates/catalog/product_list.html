@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} — WILLI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="catalog-page">
+  <div class="container">
+    {% include 'partials/breadcrumbs.html' %}
+
+    <header class="catalog-page__header">
+      <h1 class="catalog-page__title">{{ page_title }}</h1>
+      {% if page_subtitle %}<p class="catalog-page__subtitle">{{ page_subtitle }}</p>{% endif %}
+    </header>
+
+    {% include 'catalog/partials/filter_bar.html' %}
+    {% include 'catalog/partials/product_grid.html' %}
+  </div>
+</div>
+{% endblock %}

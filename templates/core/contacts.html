@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} — WILLI{% endblock %}
+{% block meta_description %}{{ page.lead }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/info-pages.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/contacts-map.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/info_layout_start.html' %}
+
+    <div class="contacts-layout">
+      <h2 class="contacts-layout__title">Магазин на карті</h2>
+
+      <div class="contacts-layout__cards">
+        <div class="contact-grid">
+          {% for card in page.cards %}
+          <article class="contact-card">
+            <span class="contact-card__icon" aria-hidden="true">{{ card.icon }}</span>
+            <h2 class="contact-card__label">{{ card.label }}</h2>
+            <p class="contact-card__value">
+              {% if card.href_key == 'phone_href' %}
+              <a href="tel:{{ site_contacts.phone_href }}">{{ site_contacts.phone }}</a>
+              {% elif card.href_key == 'email' %}
+              <a href="mailto:{{ site_contacts.email }}">{{ site_contacts.email }}</a>
+              {% elif card.value_key == 'address' %}
+              {{ site_contacts.address }}
+              {% elif card.value_key == 'hours' %}
+              {{ site_contacts.hours }}
+              {% endif %}
+            </p>
+            <p class="contact-card__hint">{{ card.hint }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="contacts-map">
+        <iframe
+          class="contacts-map__frame"
+          src="{{ map_embed_url }}"
+          title="Магазин WILLI на карті — {{ site_contacts.address }}"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <div class="contacts-layout__meta">
+        <p class="contacts-map__address">{{ site_contacts.address }}</p>
+        <a href="{{ map_open_url }}" class="contacts-map__link" target="_blank" rel="noopener noreferrer">
+          Відкрити в Google Maps →
+        </a>
+      </div>
+    </div>
+
+{% include 'partials/info_layout_end.html' %}
+{% endblock %}

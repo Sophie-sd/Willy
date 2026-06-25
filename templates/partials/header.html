@@ -1,0 +1,102 @@
+{% load static catalog_tags %}
+<header class="header">
+  <div class="container header__top">
+    <a href="{% url 'home' %}" class="header__logo" aria-label="WILLI — головна">
+      <img
+        src="{% static 'images/logo-willi.png' %}"
+        alt="WILLI — ZOO МАГАЗИН"
+        class="header__logo-img"
+        width="640"
+        height="175"
+      >
+    </a>
+
+    <a href="tel:{{ site_contacts.phone_href }}" class="header__phone desktop-only">
+      <img src="{% static 'images/ui/phone.svg' %}" alt="" width="14" height="14">
+      {{ site_contacts.phone }}
+    </a>
+
+    <div class="header__actions">
+      <form class="header__search-form desktop-only" action="{% url 'search' %}" method="get">
+        <img class="header__search-icon" src="{% static 'images/ui/search.svg' %}" alt="" width="17" height="17">
+        <input
+          type="search"
+          name="q"
+          class="header__search-input"
+          placeholder="Пошук..."
+          aria-label="Пошук товарів"
+          value="{{ request.GET.q|default:'' }}"
+        >
+      </form>
+
+      <a href="{% url 'search' %}" class="header__action-btn header__action-btn--muted mobile-only" aria-label="Пошук">
+        <img src="{% static 'images/ui/search.svg' %}" alt="">
+      </a>
+
+      <a href="#" class="header__action-btn header__action-btn--cart" title="Кошик — наступний етап" aria-label="Кошик">
+        <img src="{% static 'images/ui/cart.svg' %}" alt="">
+      </a>
+
+      <button type="button" class="header__burger mobile-only" data-drawer-open aria-label="Відкрити меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="header__nav-row desktop-only">
+    <nav class="container header__nav" aria-label="Головна навігація">
+      <div class="header__catalog-wrap" data-mega-wrap>
+        <button type="button" class="header__catalog-trigger" data-mega-trigger aria-expanded="false" aria-haspopup="true">
+          Каталог
+          <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+            <path d="M1.5 1.5L6 6.5L10.5 1.5" stroke="#AAA" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <a href="{% url 'promotions' %}" class="header__nav-link{% if current_nav == 'promotions' %} is-active{% endif %}">Акції</a>
+      <a href="{% url 'delivery' %}" class="header__nav-link{% if current_nav == 'delivery' %} is-active{% endif %}">Доставка</a>
+      <a href="{% url 'faq' %}" class="header__nav-link{% if current_nav == 'faq' %} is-active{% endif %}">FAQ</a>
+      <a href="{% url 'contacts' %}" class="header__nav-link{% if current_nav == 'contacts' %} is-active{% endif %}">Контакти</a>
+    </nav>
+    {% include 'partials/mega_menu.html' %}
+  </div>
+</header>
+
+<div id="mobile-drawer" hidden>
+  <div class="mobile-drawer__overlay" data-drawer-overlay data-drawer-close></div>
+  <nav class="mobile-drawer" aria-label="Мобільне меню">
+    <div class="mobile-drawer__head">
+      <a href="{% url 'home' %}" class="header__logo header__logo--drawer" aria-label="WILLI — головна">
+        <img
+          src="{% static 'images/logo-willi.png' %}"
+          alt="WILLI"
+          class="header__logo-img"
+          width="640"
+          height="175"
+        >
+      </a>
+      <button type="button" class="mobile-drawer__close" data-drawer-close aria-label="Закрити">✕</button>
+    </div>
+    <div class="mobile-drawer__nav">
+      <a href="{% url 'catalog:product_list' %}" class="mobile-drawer__link" data-drawer-close>
+        <img src="{% static 'images/placeholders/product.svg' %}" alt=""> Каталог
+      </a>
+      <div class="mobile-drawer__sub">
+        {% for cat in nav_categories %}
+        <a href="{{ cat.get_absolute_url }}" class="mobile-drawer__sub-link" data-drawer-close>{{ cat.name }}</a>
+        {% endfor %}
+      </div>
+      <a href="{% url 'promotions' %}" class="mobile-drawer__link" data-drawer-close>Акції</a>
+      <a href="{% url 'delivery' %}" class="mobile-drawer__link" data-drawer-close>Доставка</a>
+      <a href="{% url 'faq' %}" class="mobile-drawer__link" data-drawer-close>FAQ</a>
+      <a href="{% url 'contacts' %}" class="mobile-drawer__link" data-drawer-close>Контакти</a>
+    </div>
+    <div class="mobile-drawer__contact">
+      <a href="tel:{{ site_contacts.phone_href }}" class="mobile-drawer__contact-phone">
+        <img src="{% static 'images/ui/phone.svg' %}" alt="" width="16" height="16">
+        {{ site_contacts.phone }}
+      </a>
+      <div class="mobile-drawer__contact-hours">{{ site_contacts.hours }} · Київ</div>
+    </div>
+  </nav>
+</div>

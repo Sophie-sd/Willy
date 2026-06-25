@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>WILLI — ZOO МАГАЗИН у Києві</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; background: #fff; color: #1C1810; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; padding: 0; }
+
+    /* Hover effects */
+    [data-prod-card] { transition: transform .2s ease, box-shadow .2s ease; }
+    [data-prod-card]:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.10) !important; }
+    [data-btn] { transition: opacity .15s ease, transform .15s ease; }
+    [data-btn]:hover { opacity: .88; transform: translateY(-1px); }
+    [data-btn]:active { transform: scale(.97); }
+    [data-nav-lnk]:hover { color: #5ABD28 !important; }
+    [data-cart-btn] { transition: background .15s ease; }
+    [data-cart-btn]:hover { background: #3D8A18 !important; }
+    [data-foot-lnk] { transition: color .15s ease; }
+    [data-foot-lnk]:hover { color: #A8E87A !important; }
+    [data-cat-circ] { transition: transform .22s ease; cursor: pointer; }
+    [data-cat-circ]:hover { transform: translateY(-4px); }
+    [data-cat-circ]:hover [data-circ-img] { border-color: #5ABD28 !important; }
+    [data-drawer-lnk]:hover { background: #F0FAE8 !important; }
+    [data-mega-lnk]:hover { color: #5ABD28 !important; text-decoration: underline; }
+
+    /* Marquee */
+    [data-marquee] { display: inline-flex; animation: marqueeScroll 32s linear infinite; white-space: nowrap; }
+
+    /* Mega-menu */
+    [data-mega] {
+      position: absolute; left: 0; right: 0; top: 100%;
+      background: #fff; z-index: 200;
+      box-shadow: 0 16px 48px rgba(0,0,0,.12);
+      border-top: 2px solid #5ABD28;
+      animation: megaDrop .18s ease;
+    }
+
+    /* Product grid */
+    [data-prod-grid] {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    @media (min-width: 768px) { [data-prod-grid] { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1100px) { [data-prod-grid] { grid-template-columns: repeat(4, 1fr); } }
+
+    /* Category circles */
+    [data-cat-row] {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+    @media (min-width: 640px) { [data-cat-row] { grid-template-columns: repeat(4, 1fr); } }
+
+    /* Review cards */
+    [data-rev-grid] {
+      display: grid; grid-template-columns: 1fr; gap: 16px;
+    }
+    @media (min-width: 640px) { [data-rev-grid] { grid-template-columns: repeat(3, 1fr); } }
+
+    /* Footer grid */
+    [data-footer-grid] { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 16px; }
+    @media (min-width: 768px) { [data-footer-grid] { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; } }
+
+    /* About grid */
+    [data-about-grid] { display: flex; flex-direction: column; gap: 24px; }
+    @media (min-width: 768px) { [data-about-grid] { flex-direction: row; align-items: center; gap: 48px; } }
+
+    /* Desktop/mobile */
+    [data-desktop] { display: none !important; }
+    @media (min-width: 768px) {
+      [data-desktop] { display: flex !important; }
+      [data-mobile-only] { display: none !important; }
+    }
+
+    /* Mobile drawer */
+    [data-mobile-drawer] {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: min(300px, 85vw); background: #fff; z-index: 201;
+      overflow-y: auto; animation: slideInRight .25s ease;
+      box-shadow: -4px 0 40px rgba(0,0,0,.15);
+    }
+
+    /* Running dog animation */
+    @keyframes runningLegs {
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(12deg); }
+      75% { transform: rotate(-12deg); }
+    }
+    [data-run-dog] { animation: dogRun 0.6s ease-in-out infinite alternate; }
+    @keyframes dogRun { from { transform: translateY(0); } to { transform: translateY(-2px); } }
+
+    @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes megaDrop { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    @keyframes heroFadeIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    [data-hero-content] { animation: heroFadeIn .8s ease both; }
+
+    /* Sale badge */
+    [data-sale-chip] { animation: saleP 2.5s ease infinite; }
+    @keyframes saleP { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  </style>
+</helmet>
+
+<!-- ===== MOBILE DRAWER ===== -->
+<sc-if value="{{ isMenuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeMenu }}" style="position:fixed;inset:0;background:rgba(28,24,16,.5);z-index:200;backdrop-filter:blur(3px);"></div>
+  <nav data-mobile-drawer>
+    <div style="padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F0EDE4;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <!-- Running dog mini logo -->
+        <svg width="36" height="22" viewBox="0 0 155 80" fill="none">
+          <path d="M14 35 C4 25 2 12 12 7 C18 3 26 7 22 18 C20 26 16 32 14 35Z" fill="#3D2010"/>
+          <path d="M16 32 C18 20 32 16 62 16 C94 16 114 20 124 28 C132 34 130 46 118 50 C104 54 84 54 62 54 C30 54 16 46 14 38 C12 33 15 32 16 32Z" fill="#3D2010"/>
+          <path d="M118 24 C122 14 126 6 122 2 C118 -1 110 2 110 8 C109 16 113 24 116 28Z" fill="#3D2010"/>
+          <ellipse cx="124" cy="18" rx="18" ry="15" fill="#4A2818" transform="rotate(-10 124 18)"/>
+          <path d="M110 9 C100 -1 84 1 82 11 C88 9 100 8 110 9Z" fill="#2C1A08"/>
+          <path d="M134 20 Q144 16 147 23 Q147 29 142 31 Q134 29 134 22Z" fill="#5D3422"/>
+          <ellipse cx="147" cy="25" rx="3.5" ry="3" fill="#1A0800"/>
+          <circle cx="130" cy="13" r="5" fill="white"/>
+          <circle cx="131.5" cy="14.5" r="3.5" fill="#1A0800"/>
+          <circle cx="133" cy="13" r="1.2" fill="white"/>
+          <path d="M112 38 Q120 33 127 38 Q127 45 120 45 Q112 45 112 40Z" fill="#E8601A"/>
+          <circle cx="120" cy="47" r="4" fill="#E8601A"/>
+          <path d="M102 54 Q108 45 114 56 Q114 64 109 66 Q103 66 102 60Z" fill="#3D2010"/>
+          <path d="M89 53 Q95 43 101 54 Q101 62 96 64 Q90 64 89 58Z" fill="#2C1A08"/>
+          <path d="M37 52 Q28 43 22 53 Q22 61 28 63 Q35 63 37 57Z" fill="#3D2010"/>
+          <path d="M50 50 Q41 41 35 51 Q35 59 41 61 Q48 61 50 55Z" fill="#2C1A08"/>
+        </svg>
+        <span style="font-weight:900;font-size:17px;letter-spacing:-1px;">WILLI</span>
+      </div>
+      <button onclick="{{ closeMenu }}" style="width:34px;height:34px;background:#F4F1EA;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:#666;cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:10px 14px;">
+      <a data-drawer-lnk href="/catalog" style="display:flex;align-items:center;gap:10px;padding:13px 12px;font-weight:700;font-size:15px;color:#1C1810;border-radius:10px;"><span style="font-size:18px;">🛍️</span>Каталог<span style="margin-left:auto;color:#CCC;">›</span></a>
+      <div style="margin:2px 0 4px 16px;border-left:2px solid #D4F0B0;padding-left:12px;">
+        <a data-drawer-lnk href="/cats" style="display:flex;align-items:center;gap:8px;padding:9px 10px;font-size:14px;color:#555;border-radius:8px;">🐱 Коти</a>
+        <a data-drawer-lnk href="/dogs" style="display:flex;align-items:center;gap:8px;padding:9px 10px;font-size:14px;color:#555;border-radius:8px;">🐕 Собаки</a>
+        <a data-drawer-lnk href="/birds" style="display:flex;align-items:center;gap:8px;padding:9px 10px;font-size:14px;color:#555;border-radius:8px;">🦜 Птахи</a>
+        <a data-drawer-lnk href="/rodents" style="display:flex;align-items:center;gap:8px;padding:9px 10px;font-size:14px;color:#555;border-radius:8px;">🐹 Гризуни</a>
+      </div>
+      <a data-drawer-lnk href="/promotions" style="display:flex;align-items:center;gap:10px;padding:13px 12px;font-weight:700;font-size:15px;color:#1C1810;border-radius:10px;"><span>🏷️</span>Акції</a>
+      <a data-drawer-lnk href="/delivery" style="display:flex;align-items:center;gap:10px;padding:13px 12px;font-weight:700;font-size:15px;color:#1C1810;border-radius:10px;"><span>🚚</span>Доставка</a>
+      <a data-drawer-lnk href="/reviews" style="display:flex;align-items:center;gap:10px;padding:13px 12px;font-weight:700;font-size:15px;color:#1C1810;border-radius:10px;"><span>⭐</span>Відгуки</a>
+      <a data-drawer-lnk href="/contacts" style="display:flex;align-items:center;gap:10px;padding:13px 12px;font-weight:700;font-size:15px;color:#1C1810;border-radius:10px;"><span>📍</span>Контакти</a>
+    </div>
+    <div style="margin:8px 16px 20px;padding:16px;background:#F0FAE8;border-radius:14px;">
+      <a href="tel:+380663202862" style="font-weight:800;font-size:16px;color:#2A6008;display:flex;align-items:center;gap:8px;">📞 066 320 28 62</a>
+      <div style="font-size:12px;color:#888;margin-top:5px;font-weight:500;">щодня 8:00–19:00 · Київ</div>
+    </div>
+  </nav>
+</sc-if>
+
+<!-- ===== PROMO STRIP ===== -->
+<div style="background:#162B0A;color:#A8E87A;padding:9px 0;overflow:hidden;font-size:11.5px;font-weight:600;letter-spacing:.3px;user-select:none;">
+  <div data-marquee>
+    <span style="padding:0 32px;">🚚 Доставка Новою Поштою та Укрпоштою по всій Україні</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">📍 Київ, просп. Палладіна Академіка, 23а</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">🕗 Щодня з 8:00 до 19:00</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">💳 Оплата ПриватБанком</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">🚚 Доставка Новою Поштою та Укрпоштою по всій Україні</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">📍 Київ, просп. Палладіна Академіка, 23а</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">🕗 Щодня з 8:00 до 19:00</span><span style="opacity:.3;padding:0 8px;">·</span>
+    <span style="padding:0 32px;">💳 Оплата ПриватБанком</span><span style="opacity:.3;padding:0 8px;">·</span>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header style="position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #EDE9DF;">
+
+  <!-- Top row: logo + phone + actions -->
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+
+    <!-- LOGO: running dachshund + WILLI wordmark -->
+    <a href="/" style="display:flex;align-items:center;gap:12px;flex-shrink:0;text-decoration:none;">
+      <svg data-run-dog width="64" height="40" viewBox="0 0 155 80" fill="none">
+        <path d="M14 35 C4 25 2 12 12 7 C18 3 26 7 22 18 C20 26 16 32 14 35Z" fill="#3D2010"/>
+        <path d="M16 32 C18 20 32 16 62 16 C94 16 114 20 124 28 C132 34 130 46 118 50 C104 54 84 54 62 54 C30 54 16 46 14 38 C12 33 15 32 16 32Z" fill="#3D2010"/>
+        <path d="M118 24 C122 14 126 6 122 2 C118 -1 110 2 110 8 C109 16 113 24 116 28Z" fill="#3D2010"/>
+        <ellipse cx="124" cy="18" rx="18" ry="15" fill="#4A2818" transform="rotate(-10 124 18)"/>
+        <path d="M110 9 C100 -1 84 1 82 11 C88 9 100 8 110 9Z" fill="#2C1A08"/>
+        <path d="M134 20 Q144 16 147 23 Q147 29 142 31 Q134 29 134 22Z" fill="#5D3422"/>
+        <ellipse cx="147" cy="25" rx="3.5" ry="3" fill="#1A0800"/>
+        <circle cx="130" cy="13" r="5" fill="white"/>
+        <circle cx="131.5" cy="14.5" r="3.5" fill="#1A0800"/>
+        <circle cx="133" cy="13" r="1.2" fill="white"/>
+        <ellipse cx="141" cy="23" rx="8" ry="5" fill="#9B6030" opacity=".42"/>
+        <path d="M112 38 Q120 33 127 38 Q127 45 120 45 Q112 45 112 40Z" fill="#E8601A"/>
+        <circle cx="120" cy="47" r="4" fill="#E8601A"/>
+        <path d="M102 54 Q108 45 114 56 Q114 64 109 66 Q103 66 102 60Z" fill="#3D2010"/>
+        <path d="M89 53 Q95 43 101 54 Q101 62 96 64 Q90 64 89 58Z" fill="#2C1A08"/>
+        <path d="M37 52 Q28 43 22 53 Q22 61 28 63 Q35 63 37 57Z" fill="#3D2010"/>
+        <path d="M50 50 Q41 41 35 51 Q35 59 41 61 Q48 61 50 55Z" fill="#2C1A08"/>
+      </svg>
+      <div>
+        <div style="font-weight:900;font-size:22px;line-height:1;color:#1C1810;letter-spacing:-1.5px;">WILLI</div>
+        <div style="font-size:8px;font-weight:700;color:#5ABD28;text-transform:uppercase;letter-spacing:2.5px;line-height:1.4;margin-top:1px;">ZOO МАГАЗИН</div>
+      </div>
+    </a>
+
+    <!-- Phone (desktop) -->
+    <a data-desktop href="tel:+380663202862" style="align-items:center;gap:6px;font-size:13px;font-weight:700;color:#1C1810;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2" stroke="#5ABD28" stroke-width="2.5" stroke-linecap="round"/></svg>
+      066 320 28 62
+    </a>
+
+    <!-- Actions -->
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <button data-btn style="width:40px;height:40px;border-radius:50%;background:#F4F1EA;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7.5" stroke="#666" stroke-width="2"/><path d="M17 17L22 22" stroke="#666" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button data-btn onclick="{{ addToCart }}" style="width:40px;height:40px;border-radius:50%;background:#5ABD28;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M16 10a4 4 0 01-8 0" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:-3px;right:-3px;width:18px;height:18px;background:#E8501A;border-radius:50%;font-size:10px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff;">{{ cartCount }}</div>
+        </sc-if>
+      </button>
+      <button data-mobile-only data-btn onclick="{{ toggleMenu }}" style="width:40px;height:40px;background:#F4F1EA;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4.5px;cursor:pointer;padding:10px;">
+        <span style="display:block;width:18px;height:2px;background:#1C1810;border-radius:2px;"></span>
+        <span style="display:block;width:12px;height:2px;background:#1C1810;border-radius:2px;align-self:flex-end;"></span>
+        <span style="display:block;width:18px;height:2px;background:#1C1810;border-radius:2px;"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Nav row (desktop) with mega-menu -->
+  <div data-desktop style="border-top:1px solid #F0EDE4;position:relative;justify-content:center;">
+    <nav style="max-width:1280px;margin:0 auto;padding:0 24px;height:44px;display:flex;align-items:center;gap:0;">
+
+      <!-- КАТАЛОГ mega-trigger -->
+      <div style="position:static;" data-mega-wrap>
+        <button onclick="{{ toggleMega }}" style="display:flex;align-items:center;gap:5px;padding:0 18px;height:44px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1C1810;cursor:pointer;font-family:inherit;background:none;border:none;">
+          Каталог
+          <svg width="10" height="7" viewBox="0 0 12 8" fill="none"><path d="M1.5 1.5L6 6.5L10.5 1.5" stroke="#AAA" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+
+        <!-- MEGA MENU -->
+        <sc-if value="{{ isMegaOpen }}" hint-placeholder-val="{{ false }}">
+          <div data-mega>
+            <div style="max-width:1280px;margin:0 auto;padding:32px 40px 36px;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;">
+
+              <!-- КОТИ -->
+              <div>
+                <div style="width:100%;aspect-ratio:4/3;background:#FFF5E0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:16px;">🐱</div>
+                <div style="font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#1C1810;margin-bottom:12px;">КОТИ</div>
+                <a data-mega-lnk href="/cats/food" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Корм</a>
+                <a data-mega-lnk href="/cats/toys" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Іграшки</a>
+                <a data-mega-lnk href="/cats/accessories" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Аксесуари</a>
+                <a data-mega-lnk href="/cats/litter" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Наповнювач</a>
+                <a href="/cats" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5ABD28;margin-top:10px;">Всі товари →</a>
+              </div>
+
+              <!-- СОБАКИ -->
+              <div>
+                <div style="width:100%;aspect-ratio:4/3;background:#EAF6D8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:16px;">🐕</div>
+                <div style="font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#1C1810;margin-bottom:12px;">СОБАКИ</div>
+                <a data-mega-lnk href="/dogs/food" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Корм</a>
+                <a data-mega-lnk href="/dogs/toys" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Іграшки</a>
+                <a data-mega-lnk href="/dogs/leashes" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Нашийники та повідці</a>
+                <a data-mega-lnk href="/dogs/beds" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Лежаки</a>
+                <a href="/dogs" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5ABD28;margin-top:10px;">Всі товари →</a>
+              </div>
+
+              <!-- ПТАХИ -->
+              <div>
+                <div style="width:100%;aspect-ratio:4/3;background:#E8EFF8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:16px;">🦜</div>
+                <div style="font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#1C1810;margin-bottom:12px;">ПТАХИ</div>
+                <a data-mega-lnk href="/birds/food" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Корм</a>
+                <a data-mega-lnk href="/birds/toys" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Іграшки</a>
+                <a data-mega-lnk href="/birds/cages" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Клітки</a>
+                <a data-mega-lnk href="/birds/accessories" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Аксесуари</a>
+                <a href="/birds" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5ABD28;margin-top:10px;">Всі товари →</a>
+              </div>
+
+              <!-- ГРИЗУНИ -->
+              <div>
+                <div style="width:100%;aspect-ratio:4/3;background:#FBF0E8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:16px;">🐹</div>
+                <div style="font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#1C1810;margin-bottom:12px;">ГРИЗУНИ</div>
+                <a data-mega-lnk href="/rodents/food" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Корм</a>
+                <a data-mega-lnk href="/rodents/toys" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Іграшки</a>
+                <a data-mega-lnk href="/rodents/cages" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Клітки</a>
+                <a data-mega-lnk href="/rodents/accessories" style="display:block;font-size:14px;color:#555;padding:4px 0;font-weight:500;">Аксесуари</a>
+                <a href="/rodents" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5ABD28;margin-top:10px;">Всі товари →</a>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <a href="/promotions" style="padding:0 18px;height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1C1810;">Акції</a>
+      <a href="/delivery" style="padding:0 18px;height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1C1810;">Доставка</a>
+      <a href="/reviews" style="padding:0 18px;height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1C1810;">Відгуки</a>
+      <a href="/contacts" style="padding:0 18px;height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1C1810;">Контакти</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO — full-bleed illustrated ===== -->
+<section style="position:relative;min-height:88vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0D2205;">
+  <!-- Illustrated botanical SVG background -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+    <!-- Sky gradient layers -->
+    <rect width="1440" height="900" fill="#0D2205"/>
+    <ellipse cx="720" cy="1100" rx="900" ry="600" fill="#1A3A0A"/>
+    <ellipse cx="200" cy="900" rx="500" ry="400" fill="#163308"/>
+    <ellipse cx="1300" cy="850" rx="450" ry="380" fill="#1E4010"/>
+    <!-- Abstract organic shapes — hills -->
+    <path d="M0 700 Q180 600 360 650 Q540 700 720 620 Q900 540 1080 610 Q1260 680 1440 580 L1440 900 L0 900Z" fill="#1A3A0A"/>
+    <path d="M0 780 Q200 720 400 750 Q600 780 800 720 Q1000 660 1200 700 Q1350 730 1440 700 L1440 900 L0 900Z" fill="#142E08"/>
+    <!-- Subtle leaf/plant shapes -->
+    <path d="M100 600 C120 560 160 540 180 570 C200 600 170 640 140 620Z" fill="#2A5010" opacity=".5"/>
+    <path d="M1300 650 C1320 610 1360 590 1380 620 C1400 650 1370 690 1340 670Z" fill="#2A5010" opacity=".5"/>
+    <path d="M50 750 C70 720 100 715 110 740 C120 765 95 790 70 775Z" fill="#203808" opacity=".6"/>
+    <path d="M1380 740 C1400 710 1430 705 1435 730 C1440 755 1415 775 1390 760Z" fill="#203808" opacity=".6"/>
+    <!-- Dotted star/light details -->
+    <circle cx="200" cy="100" r="2" fill="rgba(255,255,255,.15)"/>
+    <circle cx="500" cy="60" r="1.5" fill="rgba(255,255,255,.12)"/>
+    <circle cx="900" cy="80" r="2.5" fill="rgba(255,255,255,.1)"/>
+    <circle cx="1200" cy="120" r="2" fill="rgba(255,255,255,.14)"/>
+    <circle cx="350" cy="180" r="1.5" fill="rgba(255,255,255,.1)"/>
+    <circle cx="1050" cy="150" r="2" fill="rgba(255,255,255,.12)"/>
+    <!-- Paw prints scattered -->
+    <g fill="rgba(255,255,255,.06)">
+      <circle cx="240" cy="480" r="14"/><circle cx="222" cy="464" r="10"/><circle cx="258" cy="464" r="10"/><circle cx="240" cy="496" r="8"/>
+      <circle cx="1180" cy="520" r="12"/><circle cx="1164" cy="505" r="8"/><circle cx="1196" cy="505" r="8"/><circle cx="1180" cy="534" r="7"/>
+      <circle cx="700" cy="680" r="10"/><circle cx="686" cy="668" r="7"/><circle cx="714" cy="668" r="7"/>
+    </g>
+  </svg>
+
+  <!-- Hero content -->
+  <div data-hero-content style="position:relative;z-index:2;text-align:center;padding:40px 24px;max-width:720px;">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(90,189,40,.2);border:1px solid rgba(90,189,40,.4);color:#A8E87A;padding:7px 18px;border-radius:100px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:28px;">🐾 Зоомагазин у Києві · 066 320 28 62</div>
+    <h1 style="font-size:clamp(2.2rem,6vw,5rem);font-weight:900;color:#fff;line-height:1.05;letter-spacing:-2px;margin-bottom:20px;text-wrap:balance;">
+      Все для вашого<br>улюбленця
+    </h1>
+    <p style="font-size:clamp(1rem,2vw,1.2rem);color:rgba(255,255,255,.7);margin-bottom:36px;line-height:1.65;font-weight:500;max-width:480px;margin-left:auto;margin-right:auto;">
+      Корм, іграшки та аксесуари для котів, собак, птахів і гризунів. Доставка по Україні.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;">
+      <a data-btn href="/catalog" style="display:inline-flex;align-items:center;gap:8px;padding:15px 36px;background:#5ABD28;color:#fff;border-radius:6px;font-weight:700;font-size:14px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 28px rgba(90,189,40,.4);">
+        До каталогу
+      </a>
+      <a data-btn href="/promotions" style="display:inline-flex;align-items:center;gap:8px;padding:15px 36px;background:rgba(255,255,255,.12);color:#fff;border-radius:6px;font-weight:700;font-size:14px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:1.5px solid rgba(255,255,255,.25);">
+        Акції 🏷️
+      </a>
+    </div>
+    <!-- 3 stats -->
+    <div style="display:inline-flex;gap:0;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.12);overflow:hidden;">
+      <div style="padding:14px 28px;text-align:center;border-right:1px solid rgba(255,255,255,.1);">
+        <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1;">1 000+</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">товарів</div>
+      </div>
+      <div style="padding:14px 28px;text-align:center;border-right:1px solid rgba(255,255,255,.1);">
+        <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1;">8–19</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">щодня</div>
+      </div>
+      <div style="padding:14px 28px;text-align:center;">
+        <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1;">НП/УП</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">доставка</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORY CIRCLES ===== -->
+<section style="padding:64px 24px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="font-size:.75rem;font-weight:700;color:#5ABD28;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Що шукаєте?</div>
+      <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;color:#1C1810;letter-spacing:-1px;">Оберіть категорію</h2>
+    </div>
+    <div data-cat-row>
+      <a data-cat-circ href="/cats" style="display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;">
+        <div data-circ-img style="width:min(160px,38vw);height:min(160px,38vw);border-radius:50%;background:#FFF5E0;display:flex;align-items:center;justify-content:center;font-size:3.5rem;border:3px solid transparent;transition:border-color .22s ease;">🐱</div>
+        <span style="font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:1px;color:#1C1810;">КОТИ</span>
+      </a>
+      <a data-cat-circ href="/dogs" style="display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;">
+        <div data-circ-img style="width:min(160px,38vw);height:min(160px,38vw);border-radius:50%;background:#EAF6D8;display:flex;align-items:center;justify-content:center;font-size:3.5rem;border:3px solid #5ABD28;transition:border-color .22s ease;">🐕</div>
+        <span style="font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:1px;color:#1C1810;">СОБАКИ</span>
+      </a>
+      <a data-cat-circ href="/birds" style="display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;">
+        <div data-circ-img style="width:min(160px,38vw);height:min(160px,38vw);border-radius:50%;background:#E8EFF8;display:flex;align-items:center;justify-content:center;font-size:3.5rem;border:3px solid transparent;transition:border-color .22s ease;">🦜</div>
+        <span style="font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:1px;color:#1C1810;">ПТАХИ</span>
+      </a>
+      <a data-cat-circ href="/rodents" style="display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;">
+        <div data-circ-img style="width:min(160px,38vw);height:min(160px,38vw);border-radius:50%;background:#FBF0E8;display:flex;align-items:center;justify-content:center;font-size:3.5rem;border:3px solid transparent;transition:border-color .22s ease;">🐹</div>
+        <span style="font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:1px;color:#1C1810;">ГРИЗУНИ</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SALE PRODUCTS — moustaches.fr style ===== -->
+<section style="background:#F8F5EF;padding:64px 24px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:#E8501A;color:#fff;padding:4px 12px;border-radius:4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">АКЦІЯ</div>
+        <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;color:#1C1810;letter-spacing:-1px;line-height:1.1;">Акційні товари</h2>
+      </div>
+      <a href="/promotions" style="font-size:13px;font-weight:700;color:#5ABD28;padding-bottom:4px;">Переглянути всі →</a>
+    </div>
+
+    <div data-prod-grid>
+      <sc-for list="{{ products }}" as="prod" hint-placeholder-count="4">
+        <div data-prod-card style="background:#fff;border-radius:4px;overflow:hidden;position:relative;">
+          <!-- Image area — light warm bg -->
+          <div style="background:#F2EFE8;height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;">
+            {{ prod.emoji }}
+            <!-- Sale chip -->
+            <div data-sale-chip style="position:absolute;top:12px;left:12px;background:#E8501A;color:#fff;padding:4px 10px;border-radius:4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;">-{{ prod.pct }}%</div>
+          </div>
+          <!-- Info -->
+          <div style="padding:16px 18px 20px;">
+            <div style="font-size:10px;color:#BBB;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">{{ prod.sub }}</div>
+            <div style="font-size:14px;font-weight:500;color:#1C1810;line-height:1.4;margin-bottom:10px;min-height:40px;">{{ prod.name }}</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+              <span style="font-size:1.2rem;font-weight:900;color:#5ABD28;">{{ prod.price }} ₴</span>
+              <span style="font-size:.8rem;color:#CCC;text-decoration:line-through;font-weight:500;">{{ prod.old }} ₴</span>
+            </div>
+            <button data-cart-btn onclick="{{ addToCart }}" style="width:100%;padding:11px;background:#1C1810;color:#fff;border-radius:4px;font-weight:700;font-size:12px;letter-spacing:.6px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;">
+              В кошик
+            </button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REVIEWS — colorful cards ===== -->
+<section style="background:#F8F5EF;padding:64px 24px 72px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:.75rem;font-weight:700;color:#5ABD28;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Відгуки</div>
+      <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;color:#1C1810;letter-spacing:-1px;">Що кажуть клієнти</h2>
+    </div>
+    <div data-rev-grid>
+      <!-- Review 1 — green -->
+      <div style="background:#2A5C10;border-radius:20px;padding:28px 28px 32px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:3px;">
+          <span style="color:#A8E87A;font-size:18px;">★★★★★</span>
+        </div>
+        <h3 style="font-size:1.15rem;font-weight:800;color:#fff;line-height:1.3;">"Швидка доставка та чудовий асортимент!"</h3>
+        <p style="font-size:.9rem;color:rgba(255,255,255,.7);line-height:1.65;font-weight:400;flex:1;">Замовляла корм для кота вперше — привезли наступного дня. Корм якісний, кіт задоволений. Ціни кращі ніж у звичайних магазинах. Обов'язково замовлятиму ще!</p>
+        <div style="font-size:.85rem;font-weight:700;color:#A8E87A;">Оксана М., Київ</div>
+      </div>
+      <!-- Review 2 — warm cream -->
+      <div style="background:#FFF8EE;border-radius:20px;padding:28px 28px 32px;display:flex;flex-direction:column;gap:14px;border:1.5px solid #EDE4D0;">
+        <div style="display:flex;gap:3px;">
+          <span style="color:#E8601A;font-size:18px;">★★★★★</span>
+        </div>
+        <h3 style="font-size:1.15rem;font-weight:800;color:#1C1810;line-height:1.3;">"Моя такса в захваті від іграшок!"</h3>
+        <p style="font-size:.9rem;color:#666;line-height:1.65;font-weight:400;flex:1;">Купила набір іграшок для мого улюбленця. Якість відмінна, пес грає весь день. Дуже зручний сайт та приємне обслуговування. Дякую магазину WILLI!</p>
+        <div style="font-size:.85rem;font-weight:700;color:#E8601A;">Марина Д., Бориспіль</div>
+      </div>
+      <!-- Review 3 — light blue -->
+      <div style="background:#E8F0FC;border-radius:20px;padding:28px 28px 32px;display:flex;flex-direction:column;gap:14px;border:1.5px solid #D0DCF0;">
+        <div style="display:flex;gap:3px;">
+          <span style="color:#2A5ABD;font-size:18px;">★★★★★</span>
+        </div>
+        <h3 style="font-size:1.15rem;font-weight:800;color:#1C1810;line-height:1.3;">"Рекомендую всім власникам тварин!"</h3>
+        <p style="font-size:.9rem;color:#555;line-height:1.65;font-weight:400;flex:1;">Знайшов потрібний корм для птахів, якого немає в інших магазинах. Оплата ПриватБанком — зручно. Упаковка ціла, доставили вчасно. Дуже задоволений!</p>
+        <div style="font-size:.85rem;font-weight:700;color:#2A5ABD;">Андрій К., Вишневе</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;">
+      <a data-btn href="/reviews" style="display:inline-flex;align-items:center;gap:8px;padding:13px 32px;border:2px solid #1C1810;color:#1C1810;border-radius:6px;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;">Читати всі відгуки →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT / FEATURES ===== -->
+<section style="padding:72px 24px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div data-about-grid>
+      <!-- Left: illustrated dachshund placeholder -->
+      <div style="flex:0 0 auto;width:min(100%,420px);border-radius:20px;overflow:hidden;background:#EAF6D8;display:flex;align-items:center;justify-content:center;min-height:380px;position:relative;">
+        <svg viewBox="0 0 400 380" fill="none" style="width:90%;height:auto;">
+          <!-- Big illustrated dachshund sitting proud -->
+          <ellipse cx="200" cy="360" rx="140" ry="14" fill="rgba(30,60,10,.1)"/>
+          <path d="M72 220 C52 200 46 170 62 152 C72 138 88 140 88 162 C88 182 82 206 72 220Z" fill="#3D2010" stroke="#1A0900" stroke-width="3.5" stroke-linejoin="round"/>
+          <rect x="72" y="185" width="220" height="80" rx="40" fill="#3D2010" stroke="#1A0900" stroke-width="3.5"/>
+          <ellipse cx="185" cy="255" rx="90" ry="17" fill="#D49228" opacity=".42"/>
+          <path d="M268 188 C278 162 286 140 282 122 C278 106 264 102 252 114 C238 126 236 154 244 178 C250 200 268 202 268 188Z" fill="#3D2010" stroke="#1A0900" stroke-width="3.5" stroke-linejoin="round"/>
+          <circle cx="282" cy="108" r="58" fill="#3A1E0C" stroke="#1A0900" stroke-width="3.5"/>
+          <path d="M254 54 C238 28 214 16 192 30 C170 46 176 94 198 114 C218 132 252 116 258 86Z" fill="#2C1A0E" stroke="#1A0900" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M308 112 Q342 98 362 118 Q372 128 362 144 Q340 154 308 140Z" fill="#4A2415" stroke="#1A0900" stroke-width="3.5" stroke-linejoin="round"/>
+          <ellipse cx="338" cy="126" rx="22" ry="13" fill="#D49228" opacity=".5"/>
+          <ellipse cx="265" cy="80" rx="9" ry="5.5" fill="#D49228" opacity=".7" transform="rotate(-14 265 80)"/>
+          <circle cx="265" cy="96" r="17" fill="white" stroke="#1A0900" stroke-width="3"/>
+          <circle cx="268" cy="99" r="12" fill="#1A0900"/>
+          <circle cx="274" cy="94" r="5" fill="white"/>
+          <circle cx="265" cy="107" r="2.5" fill="rgba(255,255,255,.45)"/>
+          <ellipse cx="365" cy="133" rx="11" ry="10" fill="#1A0900"/>
+          <circle cx="361" cy="129" r="3.2" fill="rgba(255,255,255,.3)"/>
+          <path d="M352 148 Q365 160 376 148" stroke="#1A0900" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M274 160 Q280 148 290 160 Q290 170 284 172 Q276 172 274 165Z" fill="#E8601A"/>
+          <circle cx="282" cy="174" r="4.5" fill="#E8601A"/>
+          <rect x="240" y="260" width="26" height="70" rx="13" fill="#3D2010" stroke="#1A0900" stroke-width="3.5"/>
+          <rect x="212" y="264" width="26" height="66" rx="13" fill="#3D2010" stroke="#1A0900" stroke-width="3.5"/>
+          <ellipse cx="253" cy="328" rx="17" ry="10" fill="#3A1E0C"/>
+          <ellipse cx="225" cy="328" rx="17" ry="10" fill="#3A1E0C"/>
+          <rect x="110" y="260" width="26" height="70" rx="13" fill="#3D2010" stroke="#1A0900" stroke-width="3.5"/>
+          <rect x="82" y="264" width="26" height="66" rx="13" fill="#3D2010" stroke="#1A0900" stroke-width="3.5"/>
+          <ellipse cx="123" cy="328" rx="17" ry="10" fill="#3A1E0C"/>
+          <ellipse cx="95" cy="328" rx="17" ry="10" fill="#3A1E0C"/>
+        </svg>
+      </div>
+
+      <!-- Right: numbered feature cards -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div style="margin-bottom:8px;">
+          <div style="font-size:.75rem;font-weight:700;color:#5ABD28;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Наші переваги</div>
+          <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:#1C1810;letter-spacing:-1px;line-height:1.1;">Чому обирають WILLI?</h2>
+        </div>
+        <div style="background:#EAF6D8;border-radius:14px;padding:20px 22px;display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:#5ABD28;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:900;font-size:14px;color:#fff;">1</div>
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:#1C1810;margin-bottom:5px;">Доставка по всій Україні</div>
+            <div style="font-size:.85rem;color:#555;line-height:1.6;font-weight:400;">Нова Пошта та Укрпошта. Відправляємо щодня — отримайте вже завтра.</div>
+          </div>
+        </div>
+        <div style="background:#FFF5E0;border-radius:14px;padding:20px 22px;display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:#E8601A;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:900;font-size:14px;color:#fff;">2</div>
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:#1C1810;margin-bottom:5px;">Понад 1 000 товарів</div>
+            <div style="font-size:.85rem;color:#555;line-height:1.6;font-weight:400;">Корм, іграшки та аксесуари для котів, собак, птахів і гризунів — все в одному місці.</div>
+          </div>
+        </div>
+        <div style="background:#E8EFF8;border-radius:14px;padding:20px 22px;display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:#2A5ABD;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:900;font-size:14px;color:#fff;">3</div>
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:#1C1810;margin-bottom:5px;">Фізичний магазин у Києві</div>
+            <div style="font-size:.85rem;color:#555;line-height:1.6;font-weight:400;">Просп. Палладіна Академіка, 23а. Приходьте особисто — щодня з 8:00 до 19:00.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BAND ===== -->
+<section style="background:#1C1810;padding:64px 24px;text-align:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;right:-40px;top:-60px;width:300px;height:300px;border-radius:50%;background:rgba(90,189,40,.1);pointer-events:none;"></div>
+  <div style="position:absolute;left:-60px;bottom:-60px;width:240px;height:240px;border-radius:50%;background:rgba(90,189,40,.07);pointer-events:none;"></div>
+  <div style="max-width:600px;margin:0 auto;position:relative;z-index:1;">
+    <div style="font-size:2.4rem;margin-bottom:16px;">🐕</div>
+    <h2 style="font-size:clamp(1.6rem,4vw,2.8rem);font-weight:900;color:#fff;letter-spacing:-1.5px;margin-bottom:14px;line-height:1.1;">Знайдіть все потрібне для вашого улюбленця</h2>
+    <p style="font-size:.95rem;color:rgba(255,255,255,.5);margin-bottom:32px;line-height:1.65;font-weight:400;">Широкий асортимент з доставкою по Україні. Оплата ПриватБанком.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a data-btn href="/catalog" style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:#5ABD28;color:#fff;border-radius:6px;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 28px rgba(90,189,40,.35);">До каталогу</a>
+      <a data-btn href="/promotions" style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;border:1.5px solid rgba(255,255,255,.2);">Акції</a>
+    </div>
+    <div style="margin-top:24px;font-size:.85rem;color:rgba(255,255,255,.35);font-weight:400;">Або подзвоніть: <a href="tel:+380663202862" style="color:#A8E87A;font-weight:700;">066 320 28 62</a></div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer style="background:#111008;color:#fff;padding:56px 24px 32px;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div data-footer-grid style="margin-bottom:44px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <svg width="44" height="28" viewBox="0 0 155 80" fill="none">
+            <path d="M14 35 C4 25 2 12 12 7 C18 3 26 7 22 18 C20 26 16 32 14 35Z" fill="#5ABD28"/>
+            <path d="M16 32 C18 20 32 16 62 16 C94 16 114 20 124 28 C132 34 130 46 118 50 C104 54 84 54 62 54 C30 54 16 46 14 38 C12 33 15 32 16 32Z" fill="#5ABD28"/>
+            <path d="M118 24 C122 14 126 6 122 2 C118 -1 110 2 110 8 C109 16 113 24 116 28Z" fill="#5ABD28"/>
+            <ellipse cx="124" cy="18" rx="18" ry="15" fill="#5ABD28" transform="rotate(-10 124 18)"/>
+            <path d="M110 9 C100 -1 84 1 82 11 C88 9 100 8 110 9Z" fill="#3D8A18"/>
+            <path d="M134 20 Q144 16 147 23 Q147 29 142 31 Q134 29 134 22Z" fill="#3D8A18"/>
+            <circle cx="130" cy="13" r="5" fill="white"/>
+            <circle cx="131.5" cy="14.5" r="3.5" fill="#1A0800"/>
+            <circle cx="133" cy="13" r="1.2" fill="white"/>
+            <path d="M112 38 Q120 33 127 38 Q127 45 120 45 Q112 45 112 40Z" fill="#E8601A"/>
+            <path d="M102 54 Q108 45 114 56 Q114 64 109 66 Q103 66 102 60Z" fill="#5ABD28"/>
+            <path d="M89 53 Q95 43 101 54 Q101 62 96 64 Q90 64 89 58Z" fill="#3D8A18"/>
+            <path d="M37 52 Q28 43 22 53 Q22 61 28 63 Q35 63 37 57Z" fill="#5ABD28"/>
+            <path d="M50 50 Q41 41 35 51 Q35 59 41 61 Q48 61 50 55Z" fill="#3D8A18"/>
+          </svg>
+          <div>
+            <div style="font-weight:900;font-size:18px;letter-spacing:-1px;color:#fff;">WILLI</div>
+            <div style="font-size:8px;font-weight:700;color:#5ABD28;text-transform:uppercase;letter-spacing:2px;">ZOO МАГАЗИН</div>
+          </div>
+        </div>
+        <p style="font-size:.85rem;color:rgba(255,255,255,.4);line-height:1.65;max-width:230px;font-weight:400;">Зоомагазин у Києві. Корм, іграшки та аксесуари для улюбленців.</p>
+        <div style="margin-top:16px;">
+          <a href="tel:+380663202862" style="font-size:.95rem;font-weight:700;color:#A8E87A;display:flex;align-items:center;gap:6px;margin-bottom:4px;">📞 066 320 28 62</a>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.3);">щодня 8:00–19:00</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:800;font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">Навігація</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <a data-foot-lnk href="/" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Головна</a>
+          <a data-foot-lnk href="/catalog" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Каталог</a>
+          <a data-foot-lnk href="/promotions" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Акції</a>
+          <a data-foot-lnk href="/contacts" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Контакти</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:800;font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">Інформація</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <a data-foot-lnk href="/about" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Про нас</a>
+          <a data-foot-lnk href="/delivery" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Доставка та повернення</a>
+          <a data-foot-lnk href="/faq" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">FAQ</a>
+          <a data-foot-lnk href="/reviews" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Відгуки</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:800;font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">Юридичне</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <a data-foot-lnk href="/offer" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Публічна оферта</a>
+          <a data-foot-lnk href="/privacy" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Конфіденційність</a>
+          <a data-foot-lnk href="/cookies" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Політика cookies</a>
+          <a data-foot-lnk href="/terms" style="font-size:13px;color:rgba(255,255,255,.6);font-weight:400;">Умови використання</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div style="font-size:12px;color:rgba(255,255,255,.2);">© 2026 ZOO МАГАЗИН WILLI. Усі права захищені.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.16);">м. Київ, просп. Палладіна Академіка, 23а</div>
+    </div>
+  </div>
+</footer>
+
+<!-- COOKIE -->
+<sc-if value="{{ cookieBanner }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:400;background:#fff;border-radius:14px;padding:14px 20px;box-shadow:0 8px 40px rgba(0,0,0,.14);border:1.5px solid #EDE9DF;max-width:520px;width:calc(100% - 32px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <div style="font-size:13px;color:#666;font-weight:400;flex:1;min-width:180px;line-height:1.5;">Ми використовуємо <a href="/cookies" style="color:#5ABD28;font-weight:700;">cookies</a> для покращення роботи сайту.</div>
+    <button data-btn onclick="{{ acceptCookies }}" style="padding:10px 22px;background:#1C1810;color:#fff;border-radius:6px;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;flex-shrink:0;">Прийняти</button>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    isMenuOpen: false,
+    isMegaOpen: false,
+    cartCount: 0,
+    cookieBanner: !localStorage.getItem('willi_cookies_ok'),
+  };
+
+  componentDidMount() {
+    const onDocClick = (e) => {
+      if (!e.target.closest('[data-mega-wrap]')) {
+        if (this.state.isMegaOpen) this.setState({ isMegaOpen: false });
+      }
+    };
+    document.addEventListener('click', onDocClick);
+    this._clean = () => document.removeEventListener('click', onDocClick);
+  }
+
+  componentWillUnmount() { this._clean?.(); }
+
+  renderVals() {
+    const { isMenuOpen, isMegaOpen, cartCount, cookieBanner } = this.state;
+
+    const products = [
+      { emoji: '🐕', name: 'Royal Canin Mini Adult', sub: 'Корм для собак · 2 кг', price: 299, old: 389, pct: 23 },
+      { emoji: '🐱', name: 'Whiskas Kitten 12+', sub: 'Корм для котів · 800 г', price: 65, old: 89, pct: 27 },
+      { emoji: '🦮', name: 'Dog Style нашийник', sub: 'Аксесуари для собак · S', price: 120, old: 180, pct: 33 },
+      { emoji: '🎾', name: "М'яч з дзвіночком", sub: 'Іграшки для котів', price: 70, old: 95, pct: 26 },
+    ];
+
+    return {
+      isMenuOpen, isMegaOpen, cartCount, cookieBanner,
+      hasCart: cartCount > 0,
+      products,
+      toggleMenu: () => this.setState(s => ({ isMenuOpen: !s.isMenuOpen })),
+      closeMenu: () => this.setState({ isMenuOpen: false }),
+      toggleMega: () => this.setState(s => ({ isMegaOpen: !s.isMegaOpen })),
+      addToCart: () => this.setState(s => ({ cartCount: s.cartCount + 1 })),
+      acceptCookies: () => {
+        localStorage.setItem('willi_cookies_ok', '1');
+        this.setState({ cookieBanner: false });
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

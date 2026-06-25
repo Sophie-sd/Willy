@@ -1,0 +1,49 @@
+<div id="catalog-results">
+  <div id="product-grid">
+    {% if products %}
+    <div class="product-grid">
+      {% for product in products %}
+      {% include 'partials/product_card.html' %}
+      {% endfor %}
+    </div>
+
+    {% if has_prev or has_next %}
+    <nav class="catalog-pagination" aria-label="Пагінація">
+      {% if has_prev %}
+      <a href="?page={{ page|add:'-1' }}&sort={{ current_sort }}{% if filter_category %}&category={{ filter_category }}{% endif %}{% if filter_on_sale %}&on_sale=1{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         class="catalog-pagination__btn"
+         hx-get="{{ request.path }}?page={{ page|add:'-1' }}&sort={{ current_sort }}{% if filter_category %}&category={{ filter_category }}{% endif %}{% if filter_on_sale %}&on_sale=1{% endif %}{% if filter_price_min %}&price_min={{ filter_price_min }}{% endif %}{% if filter_price_max %}&price_max={{ filter_price_max }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         hx-target="#catalog-results"
+         hx-select="#catalog-results"
+         hx-push-url="true">
+        ← Назад
+      </a>
+      {% else %}
+      <button class="catalog-pagination__btn" disabled>← Назад</button>
+      {% endif %}
+
+      <span class="catalog-pagination__btn" style="border:none;">Стор. {{ page }}</span>
+
+      {% if has_next %}
+      <a href="?page={{ page|add:'1' }}&sort={{ current_sort }}"
+         class="catalog-pagination__btn"
+         hx-get="{{ request.path }}?page={{ page|add:'1' }}&sort={{ current_sort }}{% if filter_category %}&category={{ filter_category }}{% endif %}{% if filter_on_sale %}&on_sale=1{% endif %}{% if filter_price_min %}&price_min={{ filter_price_min }}{% endif %}{% if filter_price_max %}&price_max={{ filter_price_max }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         hx-target="#catalog-results"
+         hx-select="#catalog-results"
+         hx-push-url="true">
+        Далі →
+      </a>
+      {% else %}
+      <button class="catalog-pagination__btn" disabled>Далі →</button>
+      {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="catalog-empty">
+      <h2 class="catalog-empty__title">Товарів не знайдено</h2>
+      <p>Спробуйте змінити фільтри або скористайтесь пошуком.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>

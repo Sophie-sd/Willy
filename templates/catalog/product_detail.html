@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static catalog_tags %}
+
+{% block title %}{{ product.name }} — WILLI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+  <div class="container">
+    {% include 'partials/breadcrumbs.html' %}
+
+    <div class="product-detail__grid">
+      <div class="product-detail__gallery">
+        {% product_image_src product as img_src %}
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <img src="{% static img_src %}" alt="{{ product.name }}">
+        {% endif %}
+        {% if product.is_on_sale %}
+        <span class="product-detail__badge">Акція {% if product.discount_percent %}-{{ product.discount_percent }}%{% endif %}</span>
+        {% endif %}
+      </div>
+
+      <div class="product-detail__info">
+        <div class="product-detail__category">{{ product.subcategory_label }}</div>
+        <h1 class="product-detail__name">{{ product.name }}</h1>
+
+        <div class="product-detail__prices">
+          <span class="product-detail__price">{{ product.price|floatformat:0 }} ₴</span>
+          {% if product.old_price %}
+          <span class="product-detail__old-price">{{ product.old_price|floatformat:0 }} ₴</span>
+          {% endif %}
+          {% if product.discount_percent %}
+          <span class="product-detail__discount">-{{ product.discount_percent }}%</span>
+          {% endif %}
+        </div>
+
+        <div class="product-detail__availability product-detail__availability--{% if product.is_available %}in{% else %}out{% endif %}">
+          <span class="product-detail__availability-dot"></span>
+          {% if product.is_available %}Є в наявності{% else %}Немає в наявності{% endif %}
+        </div>
+
+        {% if product.description %}
+        <div class="product-detail__description">{{ product.description }}</div>
+        {% endif %}
+
+        <div class="product-detail__actions">
+          <button type="button" class="btn btn--disabled" disabled style="width:100%;">
+            Додати в кошик
+          </button>
+          <p class="product-detail__cart-note">Оформлення замовлення — на наступному етапі</p>
+        </div>
+      </div>
+    </div>
+
+    {% if related_products %}
+    <section class="product-detail__related">
+      <h2 class="product-detail__related-title">Схожі товари</h2>
+      <div class="product-grid">
+        {% for product in related_products %}
+        {% include 'partials/product_card.html' %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

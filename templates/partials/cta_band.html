@@ -1,0 +1,30 @@
+<section class="cta-band" aria-label="Замовлення">
+  <div class="cta-band__inner">
+    <header class="cta-band__header">
+      <p class="cta-band__eyebrow">Доставка по всій Україні</p>
+      <h2 class="cta-band__title">Готові зробити замовлення?</h2>
+    </header>
+
+    <div class="cta-band__perks">
+      <div class="cta-band__perk">
+        <span class="cta-band__perk-icon" aria-hidden="true">✓</span>
+        <p class="cta-band__perk-text">Доставка Новою Поштою та Укрпоштою</p>
+      </div>
+      <div class="cta-band__perk">
+        <span class="cta-band__perk-icon" aria-hidden="true">✓</span>
+        <p class="cta-band__perk-text">Перевірені бренди для ваших улюбленців</p>
+      </div>
+      <div class="cta-band__perk">
+        <span class="cta-band__perk-icon" aria-hidden="true">✓</span>
+        <p class="cta-band__perk-text">Магазин у Києві — {{ site_contacts.hours }}</p>
+      </div>
+    </div>
+
+    <footer class="cta-band__footer">
+      <a href="{% url 'catalog:product_list' %}" class="btn btn--primary cta-band__btn">Перейти в каталог</a>
+      <p class="cta-band__phone">
+        або <a href="tel:{{ site_contacts.phone_href }}">зателефонуйте — {{ site_contacts.phone }}</a>
+      </p>
+    </footer>
+  </div>
+</section>

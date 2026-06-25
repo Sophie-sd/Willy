@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static catalog_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/hero-banner.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/cta-band.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/reviews.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/carousel.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/hero_banner.html' %}
+
+<section class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div class="section__eyebrow">Що шукаєте?</div>
+      <h2 class="section__title">Оберіть категорію</h2>
+    </div>
+    <div class="category-cards">
+      {% for cat in categories %}
+      <a href="{{ cat.get_absolute_url }}" class="category-card">
+        <div class="category-card__image">
+          {% if cat.image %}
+          <img src="{{ cat.image.url }}" alt="{{ cat.name }}" loading="lazy">
+          {% else %}
+          <img src="{% static cat.slug|category_placeholder %}" alt="{{ cat.name }}" loading="lazy" width="800" height="600">
+          {% endif %}
+        </div>
+        <div class="category-card__label">{{ cat.name }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    <div class="sale-section__head">
+      <div>
+        <span class="sale-section__badge">Акція</span>
+        <h2 class="section__title">Акційні товари</h2>
+      </div>
+      <a href="{% url 'promotions' %}" class="sale-section__link">Переглянути всі →</a>
+    </div>
+    <div class="carousel" data-carousel>
+      <button type="button" class="carousel__nav carousel__nav--prev" data-carousel-prev aria-label="Назад">
+        <img src="{% static 'images/ui/chevron.svg' %}" alt="">
+      </button>
+      <div class="carousel__track-wrap">
+        <div class="carousel__track" data-carousel-track>
+          {% for product in sale_products %}
+          <div class="carousel__slide" data-carousel-slide>
+            {% include 'partials/product_card.html' %}
+          </div>
+          {% empty %}
+          <p>Наразі немає акційних товарів.</p>
+          {% endfor %}
+        </div>
+      </div>
+      <button type="button" class="carousel__nav carousel__nav--next" data-carousel-next aria-label="Вперед">
+        <img src="{% static 'images/ui/chevron.svg' %}" alt="">
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="reviews-section" aria-label="Відгуки">
+  <div class="reviews-section__media" aria-hidden="true">
+    <img
+      src="{% static 'images/reviews/reviews-bg.png' %}"
+      alt=""
+      width="1024"
+      height="683"
+      loading="lazy"
+      decoding="async"
+    >
+  </div>
+  <div class="reviews-section__glass" aria-hidden="true"></div>
+  <div class="reviews-section__inner">
+    <header class="reviews-section__head">
+      <div class="reviews-section__eyebrow">Відгуки</div>
+      <h2 class="reviews-section__title">Що кажуть клієнти</h2>
+    </header>
+
+    {% include 'partials/reviews_showcase.html' %}
+
+    <div class="reviews-section__footer">
+      <a href="{% url 'faq' %}" class="btn btn--ghost reviews-section__link">Читати всі відгуки →</a>
+    </div>
+  </div>
+</section>
+
+{% include 'partials/cta_band.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/hero-banner.js' %}" defer></script>
+<script src="{% static 'js/carousel.js' %}" defer></script>
+{% endblock %}

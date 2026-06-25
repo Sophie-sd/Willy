@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} — WILLI{% endblock %}
+{% block meta_description %}{{ page.lead }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/info-pages.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/info_layout_start.html' %}
+
+    <div class="faq-accordion">
+      {% for item in page.items %}
+      <details class="faq-accordion__item">
+        <summary class="faq-accordion__question">
+          <span class="faq-accordion__question-text">{{ item.question }}</span>
+          <span class="faq-accordion__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-accordion__answer-wrap">
+          <p class="faq-accordion__answer">{{ item.answer }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+
+    <div class="info-note">
+      {{ page.note }}
+      <a href="tel:{{ site_contacts.phone_href }}">{{ site_contacts.phone }}</a>
+      ·
+      <a href="mailto:{{ site_contacts.email }}">{{ site_contacts.email }}</a>
+    </div>
+
+{% include 'partials/info_layout_end.html' %}
+{% endblock %}

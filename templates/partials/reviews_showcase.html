@@ -1,0 +1,27 @@
+<div class="reviews-showcase" data-carousel>
+  <button type="button" class="reviews-showcase__nav reviews-showcase__nav--prev" data-carousel-prev aria-label="Попередній відгук">
+    <span class="reviews-showcase__chevron" aria-hidden="true"></span>
+  </button>
+
+  <div class="reviews-showcase__track-wrap">
+    <div class="reviews-showcase__track" data-carousel-track>
+      {% for review in reviews %}
+      <article class="reviews-showcase__item" data-carousel-slide>
+        <div class="reviews-showcase__card">
+          <div class="reviews-showcase__stars" aria-label="5 з 5">★★★★★</div>
+          <blockquote class="reviews-showcase__quote">
+            <p>{{ review.text }}</p>
+          </blockquote>
+          <footer class="reviews-showcase__card-foot">
+            <cite class="reviews-showcase__author">{{ review.author }}</cite>
+          </footer>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <button type="button" class="reviews-showcase__nav reviews-showcase__nav--next" data-carousel-next aria-label="Наступний відгук">
+    <span class="reviews-showcase__chevron" aria-hidden="true"></span>
+  </button>
+</div>

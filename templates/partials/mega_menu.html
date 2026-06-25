@@ -1,0 +1,24 @@
+{% load static catalog_tags %}
+<div class="mega-menu" data-mega-menu hidden>
+  <div class="container mega-menu__inner">
+    {% for cat in nav_categories %}
+    <div class="mega-menu__col">
+      <div class="mega-menu__col-image">
+        {% category_image_src cat as cat_img %}
+        {% if cat.image %}
+        <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+        {% else %}
+        <img src="{% static cat_img %}" alt="{{ cat.name }}">
+        {% endif %}
+      </div>
+      <div class="mega-menu__col-title">{{ cat.name|upper }}</div>
+      {% for sub in cat.subcategories.all %}
+      {% if sub.is_active %}
+      <a href="{{ sub.get_absolute_url }}" class="mega-menu__link">{{ sub.name }}</a>
+      {% endif %}
+      {% endfor %}
+      <a href="{{ cat.get_absolute_url }}" class="mega-menu__all">Всі товари →</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>

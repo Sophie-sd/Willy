@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} — WILLI{% endblock %}
+
+{% block content %}
+<div class="stub-page container">
+  <h1 class="stub-page__title">{{ page_title }}</h1>
+  <p class="stub-page__text">Ця сторінка зʼявиться на наступному етапі розробки.</p>
+  <a href="{% url 'home' %}" class="btn btn--primary" style="margin-top:24px;">На головну</a>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} — WILLI{% endblock %}
+{% block meta_description %}{{ page.lead }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/info-pages.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/info_layout_start.html' %}
+
+    <div class="delivery-steps">
+      {% for section in page.sections %}
+      <section class="delivery-step" id="{{ section.id }}">
+        <div class="delivery-step__head">
+          <span class="delivery-step__num" aria-hidden="true">{{ section.step }}</span>
+          <div>
+            <h2 class="delivery-step__title">{{ section.title }}</h2>
+            <p class="delivery-step__intro">{{ section.intro }}</p>
+          </div>
+        </div>
+        <ul class="info-list">
+          {% for item in section.items %}
+          <li class="info-list__item">
+            <span class="info-list__label">{{ item.label }}</span>
+            <p class="info-list__text">{{ item.text }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endfor %}
+    </div>
+
+    <div class="info-note">
+      Маєте питання щодо доставки чи повернення?
+      <a href="tel:{{ site_contacts.phone_href }}">Зателефонуйте {{ site_contacts.phone }}</a>
+      або напишіть на
+      <a href="mailto:{{ site_contacts.email }}">{{ site_contacts.email }}</a>.
+    </div>
+
+{% include 'partials/info_layout_end.html' %}
+{% endblock %}

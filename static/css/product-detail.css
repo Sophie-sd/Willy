@@ -1,0 +1,144 @@
+.product-detail {
+  padding: 24px 0 64px;
+}
+
+.product-detail__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 768px) {
+  .product-detail__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+}
+
+.product-detail__gallery {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-warm);
+  aspect-ratio: 1 / 1;
+}
+
+.product-detail__gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-detail__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--color-lime);
+  color: var(--color-white);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.product-detail__category {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-lime);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.product-detail__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.product-detail__prices {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.product-detail__price {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-lime);
+}
+
+.product-detail__old-price {
+  font-size: 1rem;
+  color: #CCC;
+  text-decoration: line-through;
+}
+
+.product-detail__discount {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-lime);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.product-detail__availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.product-detail__availability--in {
+  color: var(--color-lime-dark);
+}
+
+.product-detail__availability--out {
+  color: #E8501A;
+}
+
+.product-detail__availability-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.product-detail__description {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+  margin-bottom: 28px;
+}
+
+.product-detail__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-detail__cart-note {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  text-align: center;
+}
+
+.product-detail__related {
+  margin-top: 64px;
+  padding-top: 48px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.product-detail__related-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+}

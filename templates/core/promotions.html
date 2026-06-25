@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} — WILLI{% endblock %}
+{% block meta_description %}{{ page.lead }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/info-pages.css' %}">
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/info_layout_start.html' %}
+
+    {% if products %}
+    <div class="product-grid">
+      {% for product in products %}
+      {% include 'partials/product_card.html' %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="promotions-empty">
+      <p class="promotions-empty__text">{{ page.empty_text }}</p>
+      <a href="{% url 'catalog:product_list' %}" class="btn btn--primary">Перейти в каталог</a>
+    </div>
+    {% endif %}
+
+    <div class="info-page__cta">
+      <a href="{% url 'catalog:product_list' %}" class="btn btn--outline">Усі товари</a>
+    </div>
+
+{% include 'partials/info_layout_end.html' %}
+{% endblock %}
