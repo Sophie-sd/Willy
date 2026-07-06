@@ -22,8 +22,20 @@
       <span class="product-card__old-price">{{ product.old_price|floatformat:0 }} ₴</span>
       {% endif %}
     </div>
-    <button type="button" class="product-card__btn product-card__btn--stub" disabled title="Наступний етап">
+    {% if product.is_available %}
+    <button
+      type="button"
+      class="product-card__btn"
+      hx-post="{% url 'cart:add' product.id %}"
+      hx-swap="none"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    >
       В кошик
     </button>
+    {% else %}
+    <button type="button" class="product-card__btn product-card__btn--disabled" disabled>
+      Немає в наявності
+    </button>
+    {% endif %}
   </div>
 </article>

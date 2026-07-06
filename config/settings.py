@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'catalog',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -141,6 +142,7 @@ if IS_RENDER:
 
 SITE_CONTACTS = {
     'phone': '066 320 28 62',
+    'phone_intl': '+380 66 320 28 62',
     'phone_href': '+380663202862',
     'email': 'oksanadaragan9@gmail.com',
     'address': 'м. Київ, просп. Палладіна Академіка, 23а',

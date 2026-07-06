@@ -33,8 +33,14 @@
 
       <div class="footer__contacts">
         <div class="footer__col-title">Контакти</div>
-        <a href="tel:{{ site_contacts.phone_href }}" class="footer__link">{{ site_contacts.phone }}</a>
-        <a href="mailto:{{ site_contacts.email }}" class="footer__link">{{ site_contacts.email }}</a>
+        <div class="footer__contact-item">
+          <span class="footer__contact-label">Телефон</span>
+          <a href="tel:{{ site_contacts.phone_href }}" class="footer__link">{{ site_contacts.phone_intl }}</a>
+        </div>
+        <div class="footer__contact-item">
+          <span class="footer__contact-label">Пошта</span>
+          <a href="mailto:{{ site_contacts.email }}" class="footer__link">{{ site_contacts.email }}</a>
+        </div>
       </div>
     </div>
     <div class="footer__bottom">

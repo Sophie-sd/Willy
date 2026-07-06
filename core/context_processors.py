@@ -9,10 +9,14 @@ def site_context(request):
     except Exception:
         pass
 
+    from cart.cart import Cart
+    cart = Cart(request)
+
     return {
         'site_contacts': settings.SITE_CONTACTS,
         'nav_categories': categories,
         'current_nav': _current_nav(request),
+        'cart_count': len(cart),
     }
 
 

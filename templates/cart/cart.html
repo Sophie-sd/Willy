@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Кошик — WILLI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+  <div class="container">
+    <h1 class="cart-page__title">Кошик</h1>
+
+    {% if cart_items %}
+    <div class="cart-page__layout">
+      <div class="cart-page__items">
+        {% for item in cart_items %}
+        <div class="cart-item" id="cart-item-{{ item.product_id }}">
+          <a href="{% url 'product_detail' item.slug %}" class="cart-item__image-link">
+            {% if item.image %}
+            <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item__image" loading="lazy">
+            {% elif item.image_static %}
+            <img src="{% static item.image_static %}" alt="{{ item.name }}" class="cart-item__image" loading="lazy">
+            {% else %}
+            <div class="cart-item__image cart-item__image--placeholder"></div>
+            {% endif %}
+          </a>
+
+          <div class="cart-item__info">
+            <a href="{% url 'product_detail' item.slug %}" class="cart-item__name">{{ item.name }}</a>
+            <div class="cart-item__price">{{ item.price|floatformat:0 }} ₴</div>
+          </div>
+
+          <div class="cart-item__controls">
+            <form
+              hx-post="{% url 'cart:update' item.product_id %}"
+              hx-swap="none"
+              class="cart-item__qty-form"
+            >
+              {% csrf_token %}
+              <button type="button" class="cart-item__qty-btn" data-qty-dec aria-label="Зменшити">−</button>
+              <input
+                type="number"
+                name="quantity"
+                value="{{ item.quantity }}"
+                min="0"
+                max="99"
+                class="cart-item__qty-input"
+                aria-label="Кількість"
+              >
+              <button type="button" class="cart-item__qty-btn" data-qty-inc aria-label="Збільшити">+</button>
+            </form>
+            <div class="cart-item__subtotal">{{ item.subtotal|floatformat:0 }} ₴</div>
+          </div>
+
+          <form
+            hx-post="{% url 'cart:remove' item.product_id %}"
+            hx-swap="none"
+            class="cart-item__remove-form"
+          >
+            {% csrf_token %}
+            <button type="submit" class="cart-item__remove" aria-label="Видалити товар">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M2 4h12M6 4V2h4v2M5 4v8h6V4H5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+
+      <aside class="cart-page__summary">
+        <div class="cart-summary">
+          <h2 class="cart-summary__title">Разом</h2>
+          <div class="cart-summary__row">
+            <span>Товарів</span>
+            <span id="cart-badge-summary">{{ cart_count }}</span>
+          </div>
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Сума</span>
+            <strong id="cart-total">{{ cart_total|floatformat:0 }} ₴</strong>
+          </div>
+          <button type="button" class="btn cart-summary__checkout" disabled>
+            Оформити замовлення
+          </button>
+          <p class="cart-summary__note">Оформлення замовлення — на наступному етапі</p>
+        </div>
+      </aside>
+    </div>
+
+    {% else %}
+    <div class="cart-page__empty">
+      <img src="{% static 'images/ui/cart.svg' %}" alt="" class="cart-page__empty-icon">
+      <p class="cart-page__empty-text">Ваш кошик порожній</p>
+      <a href="{% url 'catalog:product_list' %}" class="btn">Перейти до каталогу</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/cart.js' %}" defer></script>
+{% endblock %}

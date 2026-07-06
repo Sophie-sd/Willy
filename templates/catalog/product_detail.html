@@ -49,10 +49,22 @@
         {% endif %}
 
         <div class="product-detail__actions">
-          <button type="button" class="btn btn--disabled" disabled style="width:100%;">
+          {% if product.is_available %}
+          <button
+            type="button"
+            class="btn btn--primary"
+            style="width:100%;"
+            hx-post="{% url 'cart:add' product.id %}"
+            hx-swap="none"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          >
             Додати в кошик
           </button>
-          <p class="product-detail__cart-note">Оформлення замовлення — на наступному етапі</p>
+          {% else %}
+          <button type="button" class="btn btn--disabled" disabled style="width:100%;">
+            Немає в наявності
+          </button>
+          {% endif %}
         </div>
       </div>
     </div>

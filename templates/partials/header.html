@@ -33,8 +33,13 @@
         <img src="{% static 'images/ui/search.svg' %}" alt="">
       </a>
 
-      <a href="#" class="header__action-btn header__action-btn--cart" title="Кошик — наступний етап" aria-label="Кошик">
+      <a href="{% url 'cart:detail' %}" class="header__action-btn header__action-btn--cart" aria-label="Кошик">
         <img src="{% static 'images/ui/cart.svg' %}" alt="">
+        {% if cart_count %}
+        <span class="header__cart-badge" id="cart-badge">{{ cart_count }}</span>
+        {% else %}
+        <span class="header__cart-badge header__cart-badge--hidden" id="cart-badge"></span>
+        {% endif %}
       </a>
 
       <button type="button" class="header__burger mobile-only" data-drawer-open aria-label="Відкрити меню">

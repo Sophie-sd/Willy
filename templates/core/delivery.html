@@ -34,10 +34,11 @@
     </div>
 
     <div class="info-note">
-      Маєте питання щодо доставки чи повернення?
-      <a href="tel:{{ site_contacts.phone_href }}">Зателефонуйте {{ site_contacts.phone }}</a>
-      або напишіть на
-      <a href="mailto:{{ site_contacts.email }}">{{ site_contacts.email }}</a>.
+      <p class="info-note__text">Маєте питання щодо доставки чи повернення?</p>
+      <div class="info-note__contacts">
+        <a href="tel:{{ site_contacts.phone_href }}" class="info-note__link">{{ site_contacts.phone }}</a>
+        <a href="mailto:{{ site_contacts.email }}" class="info-note__link">{{ site_contacts.email }}</a>
+      </div>
     </div>
 
 {% include 'partials/info_layout_end.html' %}

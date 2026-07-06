@@ -21,7 +21,6 @@
 </head>
 <body>
   <div class="site-top">
-    {% include 'partials/promo_strip.html' %}
     {% include 'partials/header.html' %}
   </div>
 
@@ -32,8 +31,11 @@
   {% include 'partials/footer.html' %}
   {% include 'partials/cookie_banner.html' %}
 
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
   <script src="{% static 'js/main.js' %}" defer></script>
   <script src="{% static 'js/mega-menu.js' %}" defer></script>
+  <script src="{% static 'js/cart.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
