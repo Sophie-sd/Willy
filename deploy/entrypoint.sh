@@ -34,6 +34,9 @@ WAIT_DB
 echo "==> Running migrations..."
 python manage.py migrate --noinput --verbosity 1
 
+echo "==> Importing page content (idempotent)..."
+python manage.py migrate_page_content
+
 # ─── 3. STATIC FILES
 echo "==> Collecting static files..."
 python manage.py collectstatic --noinput --verbosity 0
