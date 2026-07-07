@@ -4,6 +4,18 @@
   <section class="info-hero section--cream">
     <div class="container">
       <header class="info-hero__header">
+        {% if page.header_image_url %}
+        <div class="info-hero__media">
+          <img
+            src="{{ page.header_image_url }}"
+            alt="{{ page.title }}"
+            width="1440"
+            height="480"
+            loading="eager"
+            decoding="async"
+          >
+        </div>
+        {% endif %}
         <p class="info-hero__eyebrow">{{ page.eyebrow }}</p>
         <h1 class="info-hero__title">{{ page.title }}</h1>
         <p class="info-hero__lead">{{ page.lead }}</p>

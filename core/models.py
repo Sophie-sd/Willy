@@ -63,12 +63,64 @@ class Review(models.Model):
         return self.author
 
 
+class HeroSlide(models.Model):
+    title = models.CharField(
+        'Заголовок',
+        max_length=80,
+        help_text='До 80 символів',
+    )
+    subtitle = models.CharField(
+        'Підзаголовок',
+        max_length=200,
+        blank=True,
+        help_text='До 200 символів',
+    )
+    cta_text = models.CharField(
+        'Текст кнопки',
+        max_length=48,
+        help_text='До 48 символів, напр. «До каталогу»',
+    )
+    cta_url = models.CharField(
+        'Посилання кнопки',
+        max_length=128,
+        help_text='Відносний шлях: /catalog/, /promotions/, /delivery/',
+    )
+    image = models.ImageField(
+        'Зображення',
+        upload_to='hero/',
+        help_text='Рекомендовано: 1920×1080 px, JPG або WebP, до 3 МБ',
+    )
+    object_position = models.CharField(
+        'Позиція фото',
+        max_length=32,
+        default='center center',
+        blank=True,
+        help_text='CSS object-position: top, center center, 30% 50% тощо',
+    )
+    order = models.PositiveIntegerField('Порядок', default=0)
+    is_active = models.BooleanField('Активний', default=True)
+
+    class Meta:
+        verbose_name = 'Банер головної'
+        verbose_name_plural = 'Банери головної'
+        ordering = ['order', 'pk']
+
+    def __str__(self):
+        return self.title
+
+
 class ContentPage(models.Model):
     slug = models.SlugField('Slug', unique=True)
     title = models.CharField('Заголовок', max_length=128)
     eyebrow = models.CharField('Eyebrow', max_length=128, blank=True)
     lead = models.TextField('Lead', blank=True)
     body = models.TextField('Тіло (HTML)', blank=True)
+    header_image = models.ImageField(
+        'Зображення заголовку сторінки',
+        upload_to='pages/',
+        blank=True,
+        help_text='Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ',
+    )
     extra_data = models.JSONField('Додаткові дані', default=dict, blank=True)
 
     class Meta:
@@ -85,6 +137,8 @@ class ContentPage(models.Model):
             'eyebrow': self.eyebrow,
             'lead': self.lead,
         }
+        if self.header_image:
+            data['header_image_url'] = self.header_image.url
         if self.extra_data:
             data.update(self.extra_data)
         return data

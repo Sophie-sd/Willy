@@ -9,7 +9,7 @@ from core.content_services import (
     get_reviews,
     get_site_contacts,
 )
-from core.hero_slides import get_hero_slides
+from core.models import HeroSlide
 
 
 def home(request):
@@ -18,7 +18,7 @@ def home(request):
     return render(request, 'core/home.html', {
         'categories': categories,
         'sale_products': sale_products,
-        'hero_slides': get_hero_slides(),
+        'hero_slides': HeroSlide.objects.filter(is_active=True).order_by('order'),
         'reviews': get_reviews(),
     })
 

@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin
 
-from .models import ContentPage, FaqItem, Review, SiteSettings
+from .models import ContentPage, FaqItem, HeroSlide, Review, SiteSettings
 
 
 @admin.register(SiteSettings)
@@ -30,6 +30,41 @@ class SiteSettingsAdmin(ModelAdmin):
         return HttpResponseRedirect(
             reverse('admin:core_sitesettings_change', args=[obj.pk]),
         )
+
+
+@admin.register(HeroSlide)
+class HeroSlideAdmin(ModelAdmin):
+    list_display = ('title', 'image_preview', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('title', 'subtitle', 'cta_text')
+    ordering = ('order', 'pk')
+    readonly_fields = ('image_preview',)
+    fieldsets = (
+        ('Тексти', {
+            'fields': ('title', 'subtitle', 'cta_text', 'cta_url'),
+            'description': (
+                'Заголовок — до 80 символів. Підзаголовок — до 200 символів. '
+                'Текст кнопки — до 48 символів.'
+            ),
+        }),
+        ('Зображення', {
+            'fields': ('image', 'image_preview', 'object_position'),
+            'description': 'Рекомендовано: 1920×1080 px, JPG або WebP, до 3 МБ.',
+        }),
+        ('Відображення', {
+            'fields': ('order', 'is_active'),
+        }),
+    )
+
+    @admin.display(description='Превʼю')
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:80px;border-radius:8px;object-fit:cover">',
+                obj.image.url,
+            )
+        return '—'
 
 
 @admin.register(FaqItem)
@@ -67,15 +102,47 @@ class ReviewAdmin(ModelAdmin):
 
 @admin.register(ContentPage)
 class ContentPageAdmin(ModelAdmin):
-    list_display = ('title', 'slug')
+    list_display = ('title', 'slug', 'header_image_preview')
     search_fields = ('title', 'slug', 'lead')
+    readonly_fields = ('header_image_preview',)
     fieldsets = (
-        (None, {'fields': ('slug', 'title', 'eyebrow', 'lead', 'body')}),
+        (None, {
+            'fields': ('slug', 'title', 'eyebrow', 'lead', 'body'),
+            'description': (
+                'Заголовок — до 128 символів. Eyebrow — до 128 символів. '
+                'Lead — короткий вступний текст.'
+            ),
+        }),
+        ('Зображення', {
+            'fields': ('header_image', 'header_image_preview'),
+            'description': 'Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ.',
+        }),
         ('JSON-дані', {
             'fields': ('extra_data',),
             'description': 'sections, cards, note, empty_text, map_embed_url тощо.',
         }),
     )
+
+    def changelist_view(self, request, extra_context=None):
+        slug = request.GET.get('slug')
+        if slug:
+            try:
+                page = ContentPage.objects.get(slug=slug)
+                return HttpResponseRedirect(
+                    reverse('admin:core_contentpage_change', args=[page.pk]),
+                )
+            except ContentPage.DoesNotExist:
+                pass
+        return super().changelist_view(request, extra_context=extra_context)
+
+    @admin.display(description='Превʼю')
+    def header_image_preview(self, obj):
+        if obj.header_image:
+            return format_html(
+                '<img src="{}" style="max-height:80px;border-radius:8px;object-fit:cover">',
+                obj.header_image.url,
+            )
+        return '—'
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == 'body':

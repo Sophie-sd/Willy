@@ -81,14 +81,39 @@ UNFOLD = {
                 ],
             },
             {
-                'title': 'Контент',
+                'title': 'Сайт — контент',
                 'separator': True,
                 'items': [
                     {
-                        'title': 'FAQ',
+                        'title': 'Банери (hero)',
+                        'icon': 'view_carousel',
+                        'link': reverse_lazy('admin:core_heroslide_changelist'),
+                    },
+                    {
+                        'title': 'Сторінка «Акції»',
+                        'icon': 'local_offer',
+                        'link': '/admin/core/contentpage/?slug=promotions',
+                    },
+                    {
+                        'title': 'Сторінка «Доставка»',
+                        'icon': 'local_shipping',
+                        'link': '/admin/core/contentpage/?slug=delivery',
+                    },
+                    {
+                        'title': 'Сторінка «Контакти»',
+                        'icon': 'contact_page',
+                        'link': reverse_lazy('admin:core_sitesettings_changelist'),
+                    },
+                    {
+                        'title': 'Сторінка «FAQ»',
                         'icon': 'help',
                         'link': reverse_lazy('admin:core_faqitem_changelist'),
                     },
+                ],
+            },
+            {
+                'title': 'Контент',
+                'items': [
                     {
                         'title': 'Відгуки',
                         'icon': 'reviews',
@@ -99,11 +124,6 @@ UNFOLD = {
                         'title': 'Сторінки',
                         'icon': 'article',
                         'link': reverse_lazy('admin:core_contentpage_changelist'),
-                    },
-                    {
-                        'title': 'Налаштування',
-                        'icon': 'settings',
-                        'link': reverse_lazy('admin:core_sitesettings_changelist'),
                     },
                 ],
             },

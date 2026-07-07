@@ -1,7 +1,8 @@
+from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from core.models import ContentPage, FaqItem, Review, SiteSettings
+from core.models import ContentPage, FaqItem, HeroSlide, Review, SiteSettings
 from core.page_content import (
     CONTACTS_PAGE,
     DELIVERY_PAGE,
@@ -77,5 +78,54 @@ class Command(BaseCommand):
                 },
             )
             self.stdout.write(self.style.SUCCESS(f'ContentPage "{slug}" — ok'))
+
+        if not HeroSlide.objects.exists():
+            hero_seed = [
+                {
+                    'title': 'Все для вашого улюбленця',
+                    'subtitle': 'Корм, іграшки та аксесуари для котів, собак, птахів і гризунів',
+                    'cta_text': 'До каталогу',
+                    'cta_url': '/catalog/',
+                    'image': 'images/hero/hero-wide.webp',
+                    'object_position': '66% 54%',
+                    'order': 1,
+                },
+                {
+                    'title': 'Акційні пропозиції',
+                    'subtitle': 'Знижки на корм, іграшки та аксесуари — щотижня нові пропозиції',
+                    'cta_text': 'Дивитись акції',
+                    'cta_url': '/promotions/',
+                    'image': 'images/hero/slide-sale-wide.jpg',
+                    'object_position': '58% center',
+                    'order': 2,
+                },
+                {
+                    'title': 'Доставка по Україні',
+                    'subtitle': 'Нова Пошта та Укрпошта. Відправляємо щодня з 8:00 до 19:00',
+                    'cta_text': 'Детальніше',
+                    'cta_url': '/delivery/',
+                    'image': 'images/hero/slide-delivery-wide.jpg',
+                    'object_position': '62% center',
+                    'order': 3,
+                },
+            ]
+            for item in hero_seed:
+                slide = HeroSlide(
+                    title=item['title'],
+                    subtitle=item['subtitle'],
+                    cta_text=item['cta_text'],
+                    cta_url=item['cta_url'],
+                    object_position=item['object_position'],
+                    order=item['order'],
+                    is_active=True,
+                )
+                image_path = settings.BASE_DIR / 'static' / item['image']
+                if image_path.exists():
+                    with image_path.open('rb') as image_file:
+                        slide.image.save(image_path.name, File(image_file), save=False)
+                slide.save()
+            self.stdout.write(self.style.SUCCESS(f'HeroSlide — {len(hero_seed)} items'))
+        else:
+            self.stdout.write('HeroSlide — already exists, skipped')
 
         self.stdout.write(self.style.SUCCESS('Done.'))

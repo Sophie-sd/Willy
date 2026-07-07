@@ -7,7 +7,7 @@
         <article class="hero-banner__slide" data-hero-slide>
           <div class="hero-banner__media">
             <img
-              src="{% static slide.image %}"
+              src="{{ slide.image.url }}"
               alt="{{ slide.title }}"
               width="1920"
               height="1080"
@@ -20,7 +20,7 @@
           <div class="hero-banner__content">
             <h1 class="hero-banner__title">{{ slide.title }}</h1>
             <p class="hero-banner__subtitle">{{ slide.subtitle }}</p>
-            <a href="{% url slide.cta_url_name %}" class="btn btn--primary hero-banner__cta">{{ slide.cta_text }}</a>
+            <a href="{{ slide.cta_url }}" class="btn btn--primary hero-banner__cta">{{ slide.cta_text }}</a>
           </div>
         </article>
         {% endfor %}
