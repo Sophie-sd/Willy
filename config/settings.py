@@ -115,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'uk'
 TIME_ZONE = 'Europe/Kyiv'
 USE_I18N = True
+LOCALE_PATHS = [BASE_DIR / 'locale']
 USE_TZ = True
 
 STATIC_URL = '/static/'

@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<a href="{% url "admin:index" %}" class="flex min-w-0 shrink items-center" aria-label="WILLI — адмінпанель">
+    {% if site_logo.light and site_logo.dark %}
+        <img
+            src="{{ site_logo.dark }}"
+            alt="WILLI"
+            class="hidden h-9 w-auto max-w-[min(180px,46vw)] object-contain dark:block md:h-10 md:max-w-[196px]"
+        />
+
+        <img
+            src="{{ site_logo.light }}"
+            alt="WILLI"
+            class="block h-9 w-auto max-w-[min(180px,46vw)] object-contain dark:hidden md:h-10 md:max-w-[196px]"
+        />
+    {% else %}
+        <img
+            src="{{ site_logo }}"
+            alt="WILLI"
+            class="block h-9 w-auto max-w-[min(180px,46vw)] object-contain md:h-10 md:max-w-[196px]"
+        />
+    {% endif %}
+</a>

@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 
 
 def _admin_logo(request):
-    return static('images/logo-dog.svg')
+    return static('images/logo-willi.png')
 
 
 UNFOLD = {
@@ -42,7 +42,7 @@ UNFOLD = {
                 'title': 'Огляд',
                 'items': [
                     {
-                        'title': 'Dashboard',
+                        'title': 'Панель',
                         'icon': 'dashboard',
                         'link': reverse_lazy('admin:index'),
                     },
