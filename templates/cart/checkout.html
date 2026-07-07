@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оформлення замовлення — WILLI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cart-page checkout-page">
+  <div class="container">
+    <h1 class="cart-page__title">Оформлення замовлення</h1>
+
+    <div class="checkout-layout">
+      <form method="post" class="checkout-form" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="checkout-form__errors" role="alert">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <fieldset class="checkout-form__section">
+          <legend class="checkout-form__legend">Контактні дані</legend>
+          {% for field in form %}
+            {% if field.name in 'customer_name phone email' %}
+            <div class="checkout-field">
+              <label class="checkout-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+              <p class="checkout-field__error">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </fieldset>
+
+        <fieldset class="checkout-form__section">
+          <legend class="checkout-form__legend">Доставка</legend>
+          {% for field in form %}
+            {% if field.name in 'delivery_method delivery_city delivery_address comment' %}
+            <div class="checkout-field">
+              <label class="checkout-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+              <p class="checkout-field__error">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </fieldset>
+
+        <button type="submit" class="btn btn--primary checkout-form__submit">
+          Підтвердити замовлення
+        </button>
+      </form>
+
+      <aside class="checkout-summary">
+        <div class="cart-summary">
+          <h2 class="cart-summary__title">Ваше замовлення</h2>
+          <ul class="checkout-summary__list">
+            {% for item in cart_items %}
+            <li class="checkout-summary__item">
+              <span class="checkout-summary__name">{{ item.name }} × {{ item.quantity }}</span>
+              <span class="checkout-summary__price">{{ item.subtotal|floatformat:0 }} ₴</span>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Разом</span>
+            <strong>{{ cart_total|floatformat:0 }} ₴</strong>
+          </div>
+          <p class="cart-summary__note">Оплата через ПриватБанк — на наступному етапі інтеграції.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -81,10 +81,10 @@
             <span>Сума</span>
             <strong id="cart-total">{{ cart_total|floatformat:0 }} ₴</strong>
           </div>
-          <button type="button" class="btn cart-summary__checkout" disabled>
+          <a href="{% url 'cart:checkout' %}" class="btn cart-summary__checkout">
             Оформити замовлення
-          </button>
-          <p class="cart-summary__note">Оформлення замовлення — на наступному етапі</p>
+          </a>
+          <p class="cart-summary__note">Оплата ПриватБанком — після підтвердження замовлення</p>
         </div>
       </aside>
     </div>

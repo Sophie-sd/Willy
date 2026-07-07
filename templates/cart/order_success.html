@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Дякуємо за замовлення — WILLI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cart-page checkout-success">
+  <div class="container">
+    <div class="checkout-success__card">
+      <h1 class="checkout-success__title">Дякуємо за замовлення!</h1>
+      <p class="checkout-success__text">
+        Ваше замовлення <strong>{{ order.number }}</strong> прийнято.
+        Ми звʼяжемося з вами для підтвердження та оплати.
+      </p>
+      <dl class="checkout-success__meta">
+        <div>
+          <dt>Сума</dt>
+          <dd>{{ order.total|floatformat:0 }} ₴</dd>
+        </div>
+        <div>
+          <dt>Телефон</dt>
+          <dd>{{ order.phone }}</dd>
+        </div>
+        <div>
+          <dt>Доставка</dt>
+          <dd>{{ order.get_delivery_method_display }}, {{ order.delivery_city }}</dd>
+        </div>
+      </dl>
+      <div class="checkout-success__actions">
+        <a href="{% url 'home' %}" class="btn btn--primary">На головну</a>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn--outline">Продовжити покупки</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

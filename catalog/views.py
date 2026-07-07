@@ -2,6 +2,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
 
 from .models import AnimalCategory, Product, Subcategory
 
@@ -34,6 +35,12 @@ def _get_products_queryset(request, base_qs=None):
     on_sale = request.GET.get('on_sale')
     if on_sale == '1':
         qs = qs.filter(is_on_sale=True)
+        now = timezone.now()
+        qs = qs.filter(
+            Q(sale_starts_at__isnull=True) | Q(sale_starts_at__lte=now),
+        ).filter(
+            Q(sale_ends_at__isnull=True) | Q(sale_ends_at__gte=now),
+        )
 
     price_min = _parse_decimal(request.GET.get('price_min'))
     price_max = _parse_decimal(request.GET.get('price_max'))

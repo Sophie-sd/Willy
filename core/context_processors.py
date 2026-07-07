@@ -1,4 +1,4 @@
-from django.conf import settings
+from core.content_services import get_site_contacts
 
 
 def site_context(request):
@@ -13,7 +13,7 @@ def site_context(request):
     cart = Cart(request)
 
     return {
-        'site_contacts': settings.SITE_CONTACTS,
+        'site_contacts': get_site_contacts(),
         'nav_categories': categories,
         'current_nav': _current_nav(request),
         'cart_count': len(cart),

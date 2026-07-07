@@ -32,15 +32,20 @@ IS_RENDER = bool(RENDER_EXTERNAL_HOSTNAME)
 IS_PRODUCTION = not DEBUG
 
 INSTALLED_APPS = [
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tinymce',
     'core',
     'catalog',
     'cart',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +161,5 @@ SITE_CONTACTS = {
     'map_lat': 50.464137,
     'map_lng': 30.35462,
 }
+
+from config.unfold_settings import TINYMCE_DEFAULT_CONFIG, UNFOLD  # noqa: E402, F401

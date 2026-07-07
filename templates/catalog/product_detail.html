@@ -20,7 +20,7 @@
         {% else %}
         <img src="{% static img_src %}" alt="{{ product.name }}">
         {% endif %}
-        {% if product.is_on_sale %}
+        {% if product.is_sale_active %}
         <span class="product-detail__badge">Акція {% if product.discount_percent %}-{{ product.discount_percent }}%{% endif %}</span>
         {% endif %}
       </div>

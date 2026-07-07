@@ -1,5 +1,19 @@
 from django.db import models
-from django.urls import reverse
+from django.utils import timezone
+
+
+class ProductQuerySet(models.QuerySet):
+    def sale_active(self):
+        now = timezone.now()
+        return self.filter(is_on_sale=True).filter(
+            models.Q(sale_starts_at__isnull=True) | models.Q(sale_starts_at__lte=now),
+        ).filter(
+            models.Q(sale_ends_at__isnull=True) | models.Q(sale_ends_at__gte=now),
+        )
+
+
+class ProductManager(models.Manager.from_queryset(ProductQuerySet)):
+    pass
 
 
 class AnimalCategory(models.Model):
@@ -18,6 +32,7 @@ class AnimalCategory(models.Model):
         return self.name
 
     def get_absolute_url(self):
+        from django.urls import reverse
         return reverse('category', kwargs={'category_slug': self.slug})
 
 
@@ -43,6 +58,7 @@ class Subcategory(models.Model):
         return f'{self.category.name} — {self.name}'
 
     def get_absolute_url(self):
+        from django.urls import reverse
         return reverse('subcategory', kwargs={
             'category_slug': self.category.slug,
             'subcategory_slug': self.slug,
@@ -69,11 +85,15 @@ class Product(models.Model):
         'Стара ціна', max_digits=10, decimal_places=2, null=True, blank=True,
     )
     is_on_sale = models.BooleanField('Акція', default=False)
+    sale_starts_at = models.DateTimeField('Початок акції', null=True, blank=True)
+    sale_ends_at = models.DateTimeField('Кінець акції', null=True, blank=True)
     is_available = models.BooleanField('В наявності', default=True)
     description = models.TextField('Опис', blank=True)
     image = models.ImageField('Зображення', upload_to='products/', blank=True)
     is_featured = models.BooleanField('Рекомендований', default=False)
     created_at = models.DateTimeField('Створено', auto_now_add=True)
+
+    objects = ProductManager()
 
     class Meta:
         verbose_name = 'Товар'
@@ -84,6 +104,7 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
+        from django.urls import reverse
         return reverse('product_detail', kwargs={'slug': self.slug})
 
     @property
@@ -95,3 +116,14 @@ class Product(models.Model):
     @property
     def subcategory_label(self):
         return f'{self.subcategory.name} для {self.category.name.lower()}'
+
+    @property
+    def is_sale_active(self):
+        if not self.is_on_sale:
+            return False
+        now = timezone.now()
+        if self.sale_starts_at and now < self.sale_starts_at:
+            return False
+        if self.sale_ends_at and now > self.sale_ends_at:
+            return False
+        return True

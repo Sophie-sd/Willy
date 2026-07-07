@@ -1,0 +1,35 @@
+{% extends 'admin/base.html' %}
+
+{% load i18n %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    {% if dashboard_stats %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        {% for stat in dashboard_stats %}
+        <a href="{% url stat.link %}" class="block bg-white border border-base-200 rounded-default p-5 shadow-xs hover:border-primary-300 transition-colors">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-sm text-font-subtle-light mb-1">{{ stat.title }}</p>
+                    <p class="text-3xl font-semibold text-font-important-light">{{ stat.value }}</p>
+                </div>
+                <span class="material-symbols-outlined text-primary-600 text-2xl">{{ stat.icon }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col lg:flex-row lg:gap-8">
+        <div class="grow">
+            {% include "unfold/helpers/app_list_default.html" %}
+        </div>
+
+        {% include "unfold/helpers/history.html" %}
+    </div>
+{% endblock %}

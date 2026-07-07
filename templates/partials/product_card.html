@@ -7,7 +7,7 @@
     {% else %}
     <img src="{% static img_src %}" alt="{{ product.name }}" loading="lazy">
     {% endif %}
-    {% if product.is_on_sale and product.discount_percent %}
+    {% if product.is_sale_active and product.discount_percent %}
     <span class="product-card__badge">-{{ product.discount_percent }}%</span>
     {% endif %}
   </a>
