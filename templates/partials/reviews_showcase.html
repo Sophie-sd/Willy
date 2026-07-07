@@ -8,7 +8,11 @@
       {% for review in reviews %}
       <article class="reviews-showcase__item" data-carousel-slide>
         <div class="reviews-showcase__card">
-          <div class="reviews-showcase__stars" aria-label="5 з 5">★★★★★</div>
+          <div class="reviews-showcase__stars" aria-label="{{ review.rating|default:5 }} з 5">
+            {% with rating=review.rating|default:5 %}
+            {% for i in "12345" %}{% if forloop.counter <= rating %}★{% else %}☆{% endif %}{% endfor %}
+            {% endwith %}
+          </div>
           <blockquote class="reviews-showcase__quote">
             <p>{{ review.text }}</p>
           </blockquote>

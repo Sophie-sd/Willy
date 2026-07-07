@@ -7,10 +7,27 @@ class SiteSettings(models.Model):
     phone_href = models.CharField('Телефон (href)', max_length=32, default='+380663202862')
     email = models.EmailField('Email', default='oksanadaragan9@gmail.com')
     address = models.CharField('Адреса', max_length=255, default='м. Київ, просп. Палладіна Академіка, 23а')
-    hours = models.CharField('Години роботи', max_length=128, default='щодня з 8:00 до 19:00')
+    hours = models.CharField('Години роботи', max_length=128, default='щодня з 9:00 до 20:00')
     name = models.CharField('Назва магазину', max_length=128, default='ZOO МАГАЗИН WILLI')
-    map_lat = models.DecimalField('Широта', max_digits=9, decimal_places=6, default=50.464137)
-    map_lng = models.DecimalField('Довгота', max_digits=9, decimal_places=6, default=30.35462)
+    map_lat = models.DecimalField('Широта', max_digits=9, decimal_places=6, default=50.466266)
+    map_lng = models.DecimalField('Довгота', max_digits=9, decimal_places=6, default=30.354818)
+    map_embed_url = models.TextField(
+        'Код карти Google (iframe src)',
+        blank=True,
+        help_text='Вставте значення src з коду вбудовування Google Maps. Рекомендований розмір: 600×450 px.',
+    )
+    google_maps_url = models.URLField(
+        'Посилання на Google Maps',
+        blank=True,
+        max_length=512,
+        help_text='Посилання на сторінку магазину в Google Maps (для кнопки «Відкрити на карті»).',
+    )
+    google_place_id = models.CharField(
+        'Google Place ID',
+        max_length=128,
+        blank=True,
+        help_text='Для автоматичного імпорту відгуків (заповнюється командою sync_google_reviews).',
+    )
 
     class Meta:
         verbose_name = 'Налаштування сайту'
@@ -30,6 +47,9 @@ class SiteSettings(models.Model):
             'name': self.name,
             'map_lat': float(self.map_lat),
             'map_lng': float(self.map_lng),
+            'map_embed_url': self.map_embed_url,
+            'google_maps_url': self.google_maps_url,
+            'google_place_id': self.google_place_id,
         }
 
 
@@ -49,8 +69,38 @@ class FaqItem(models.Model):
 
 
 class Review(models.Model):
+    SOURCE_MANUAL = 'manual'
+    SOURCE_GOOGLE = 'google'
+    SOURCE_CHOICES = [
+        (SOURCE_MANUAL, 'Вручну'),
+        (SOURCE_GOOGLE, 'Google Maps'),
+    ]
+
     text = models.TextField('Текст відгуку')
     author = models.CharField('Автор', max_length=128)
+    rating = models.PositiveSmallIntegerField(
+        'Оцінка',
+        default=5,
+        help_text='Від 1 до 5 зірок',
+    )
+    source = models.CharField(
+        'Джерело',
+        max_length=16,
+        choices=SOURCE_CHOICES,
+        default=SOURCE_MANUAL,
+    )
+    google_review_id = models.CharField(
+        'ID відгуку Google',
+        max_length=128,
+        blank=True,
+        unique=True,
+        null=True,
+    )
+    show_on_homepage = models.BooleanField(
+        'Показувати на головній',
+        default=True,
+        help_text='Відображати в блоці «Що кажуть клієнти» на головній сторінці.',
+    )
     is_published = models.BooleanField('Опубліковано', default=False)
     created_at = models.DateTimeField('Створено', auto_now_add=True)
 

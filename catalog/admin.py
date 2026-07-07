@@ -1,10 +1,25 @@
 from django.contrib import admin
+from django.templatetags.static import static
 from django.utils.html import format_html
 from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin, TabularInline
 
 from .forms import ProductAdminForm
 from .models import AnimalCategory, Product, Subcategory
+from .product_images import get_product_static_image
+from .templatetags.catalog_tags import CATEGORY_IMAGES
+
+
+def _thumb(url, *, is_fallback=False):
+    caption = 'авто' if is_fallback else ''
+    return format_html(
+        '<div style="text-align:center">'
+        '<img src="{}" style="max-height:60px;border-radius:8px;object-fit:cover">'
+        '<div style="font-size:10px;color:#9a9a9a;margin-top:2px">{}</div>'
+        '</div>',
+        url,
+        caption,
+    )
 
 
 class SubcategoryInline(TabularInline):
@@ -28,10 +43,10 @@ class AnimalCategoryAdmin(ModelAdmin):
     @admin.display(description='Превʼю')
     def image_preview(self, obj):
         if obj.image:
-            return format_html(
-                '<img src="{}" style="max-height:80px;border-radius:8px">',
-                obj.image.url,
-            )
+            return _thumb(obj.image.url)
+        static_path = CATEGORY_IMAGES.get(obj.slug)
+        if static_path:
+            return _thumb(static(static_path), is_fallback=True)
         return '—'
 
 
@@ -98,8 +113,8 @@ class ProductAdmin(ModelAdmin):
     @admin.display(description='Превʼю')
     def image_preview(self, obj):
         if obj.image:
-            return format_html(
-                '<img src="{}" style="max-height:80px;border-radius:8px">',
-                obj.image.url,
-            )
-        return '—'
+            return _thumb(obj.image.url)
+        try:
+            return _thumb(static(get_product_static_image(obj)), is_fallback=True)
+        except Exception:
+            return '—'

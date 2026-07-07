@@ -1,3 +1,15 @@
+DEFAULT_MAP_EMBED_URL = (
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2539.6487118827495!'
+    '2d30.3548178!3d50.466265899999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!'
+    '1m2!1s0x40d4cd1b0aa34b5b%3A0xd93b6ba67af65d33!2z0JfQntCe0JzQkNCT0JDQl9CY0J0gV2lsbGkg'
+    '0JDQutCw0LTQtdC80LzRltGB0YLQtdGH0LrQvg!5e0!3m2!1suk!2sua!4v1783437740909!5m2!1suk!2sua'
+)
+
+DEFAULT_GOOGLE_MAPS_URL = (
+    'https://www.google.com/maps/place/@50.4662659,30.3548178,17z/data=!3m1!4b1!4m6!3m5!'
+    '1s0x40d4cd1b0aa34b5b:0xd93b6ba67af65d33!8m2!3d50.4662659!4d30.3548178!16s%2Fg%2F11x5lg3lj6'
+)
+
 REVIEWS = [
     {
         'text': 'Замовляла корм для кота вперше — привезли наступного дня. Ціни кращі, ніж у звичайних магазинах. Швидка доставка та чудовий асортимент!',
@@ -178,13 +190,7 @@ CONTACTS_PAGE = {
     'title': 'Контакти',
     'eyebrow': 'Як нас знайти',
     'lead': 'Магазин WILLI на проспекті Палладіна в Києві — завітайте особисто або зателефонуйте.',
-    'map_embed_url': (
-        'https://www.google.com/maps/embed?pb='
-        '!1m18!1m12!1m3!1d2540.822!2d30.35462!3d50.464137!'
-        '2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!'
-        '2zNTDCsDI3JzUwLjkiTiAzMMKwMjEnMTYuNiJF!'
-        '5e0!3m2!1suk!2sua!4v1719312000000!5m2!1suk!2sua'
-    ),
+    'map_embed_url': DEFAULT_MAP_EMBED_URL,
     'cards': [
         {
             'icon': '📍',

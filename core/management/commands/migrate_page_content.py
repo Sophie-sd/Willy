@@ -5,6 +5,8 @@ from django.conf import settings
 from core.models import ContentPage, FaqItem, HeroSlide, Review, SiteSettings
 from core.page_content import (
     CONTACTS_PAGE,
+    DEFAULT_GOOGLE_MAPS_URL,
+    DEFAULT_MAP_EMBED_URL,
     DELIVERY_PAGE,
     FAQ_PAGE,
     PROMOTIONS_PAGE,
@@ -29,6 +31,8 @@ class Command(BaseCommand):
                 'name': contacts['name'],
                 'map_lat': contacts['map_lat'],
                 'map_lng': contacts['map_lng'],
+                'map_embed_url': DEFAULT_MAP_EMBED_URL,
+                'google_maps_url': DEFAULT_GOOGLE_MAPS_URL,
             },
         )
         self.stdout.write(self.style.SUCCESS('SiteSettings — ok'))
@@ -62,7 +66,7 @@ class Command(BaseCommand):
             ('faq', FAQ_PAGE, {'note': FAQ_PAGE['note']}),
             ('contacts', CONTACTS_PAGE, {
                 'cards': CONTACTS_PAGE['cards'],
-                'map_embed_url': CONTACTS_PAGE['map_embed_url'],
+                'map_embed_url': DEFAULT_MAP_EMBED_URL,
             }),
         ]
 

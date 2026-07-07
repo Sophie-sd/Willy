@@ -6,10 +6,33 @@ def _admin_logo(request):
     return static('images/logo-willi.png')
 
 
+def _favicons(request):
+    return [
+        {
+            'rel': 'icon',
+            'sizes': '32x32',
+            'type': 'image/png',
+            'href': static('images/favicon/favicon-32x32.png'),
+        },
+        {
+            'rel': 'icon',
+            'sizes': '16x16',
+            'type': 'image/png',
+            'href': static('images/favicon/favicon-16x16.png'),
+        },
+        {
+            'rel': 'apple-touch-icon',
+            'sizes': '180x180',
+            'href': static('images/favicon/apple-touch-icon.png'),
+        },
+    ]
+
+
 UNFOLD = {
     'SITE_TITLE': 'ZOO WILLI',
     'SITE_HEADER': 'ZOO МАГАЗИН WILLI — Адмінпанель',
     'SITE_LOGO': _admin_logo,
+    'SITE_FAVICONS': _favicons,
     'THEME': 'light',
     'SHOW_VIEW_ON_SITE': True,
     'DASHBOARD_CALLBACK': 'core.dashboard.dashboard_callback',

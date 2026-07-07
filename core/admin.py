@@ -14,8 +14,13 @@ class SiteSettingsAdmin(ModelAdmin):
         ('Контакти', {
             'fields': ('name', 'phone', 'phone_intl', 'phone_href', 'email', 'address', 'hours'),
         }),
-        ('Карта', {
-            'fields': ('map_lat', 'map_lng'),
+        ('Карта Google', {
+            'fields': ('map_embed_url', 'google_maps_url', 'map_lat', 'map_lng', 'google_place_id'),
+            'description': (
+                'Вставте src з iframe Google Maps у поле «Код карти». '
+                'Рекомендований розмір карти: 600×450 px. '
+                'Для імпорту відгуків запустіть: python3 manage.py sync_google_reviews'
+            ),
         }),
     )
 
@@ -88,11 +93,20 @@ def reject_reviews(modeladmin, request, queryset):
 
 @admin.register(Review)
 class ReviewAdmin(ModelAdmin):
-    list_display = ('author', 'short_text', 'is_published', 'created_at')
-    list_filter = ('is_published', 'created_at')
+    list_display = ('author', 'short_text', 'rating', 'source', 'show_on_homepage', 'is_published', 'created_at')
+    list_filter = ('source', 'is_published', 'show_on_homepage', 'rating', 'created_at')
     search_fields = ('author', 'text')
     actions = [publish_reviews, reject_reviews]
     readonly_fields = ('created_at',)
+    fieldsets = (
+        (None, {
+            'fields': ('author', 'text', 'rating', 'source', 'google_review_id'),
+            'description': 'Текст — без обмеження. Автор — до 128 символів.',
+        }),
+        ('Відображення', {
+            'fields': ('show_on_homepage', 'is_published', 'created_at'),
+        }),
+    )
 
     @admin.display(description='Текст')
     def short_text(self, obj):

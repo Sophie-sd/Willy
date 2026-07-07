@@ -40,11 +40,41 @@ def get_faq_page():
 
 def get_reviews():
     reviews = list(
-        Review.objects.filter(is_published=True).values('text', 'author'),
+        Review.objects.filter(
+            is_published=True,
+            show_on_homepage=True,
+            source=Review.SOURCE_GOOGLE,
+        ).order_by('-created_at').values('text', 'author', 'rating'),
     )
     if reviews:
         return reviews
-    return REVIEWS
+
+    reviews = list(
+        Review.objects.filter(
+            is_published=True,
+            show_on_homepage=True,
+        ).order_by('-created_at').values('text', 'author', 'rating'),
+    )
+    if reviews:
+        return reviews
+
+    return [{**item, 'rating': 5} for item in REVIEWS]
+
+
+def get_map_embed_url():
+    contacts = get_site_contacts()
+    if contacts.get('map_embed_url'):
+        return contacts['map_embed_url']
+    return CONTACTS_PAGE.get('map_embed_url', '')
+
+
+def get_google_maps_url():
+    contacts = get_site_contacts()
+    if contacts.get('google_maps_url'):
+        return contacts['google_maps_url']
+    lat = contacts['map_lat']
+    lng = contacts['map_lng']
+    return f'https://www.google.com/maps/search/?api=1&query={lat},{lng}'
 
 
 def get_promotions_page():

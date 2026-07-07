@@ -157,10 +157,13 @@ SITE_CONTACTS = {
     'phone_href': '+380663202862',
     'email': 'oksanadaragan9@gmail.com',
     'address': 'м. Київ, просп. Палладіна Академіка, 23а',
-    'hours': 'щодня з 8:00 до 19:00',
+    'hours': 'щодня з 9:00 до 20:00',
     'name': 'ZOO МАГАЗИН WILLI',
-    'map_lat': 50.464137,
-    'map_lng': 30.35462,
+    'map_lat': 50.466266,
+    'map_lng': 30.354818,
+    'map_embed_url': '',
+    'google_maps_url': '',
+    'google_place_id': '',
 }
 
 from config.unfold_settings import TINYMCE_DEFAULT_CONFIG, UNFOLD  # noqa: E402, F401
