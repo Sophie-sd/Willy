@@ -19,11 +19,17 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+APP_HOSTNAME = os.environ.get('APP_HOSTNAME', '')
+if APP_HOSTNAME and APP_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(APP_HOSTNAME)
+
+# Render.com backward compat
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 IS_RENDER = bool(RENDER_EXTERNAL_HOSTNAME)
+IS_PRODUCTION = not DEBUG
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,8 +55,7 @@ MIDDLEWARE = [
 
 USE_WHITENOISE = (
     os.environ.get('USE_WHITENOISE', '').lower() in ('1', 'true', 'yes')
-    or IS_RENDER
-    or not DEBUG
+    or IS_PRODUCTION
 )
 
 if USE_WHITENOISE:
@@ -84,7 +89,7 @@ if DATABASE_URL:
         'default': dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=IS_RENDER,
+            ssl_require=os.environ.get('DB_SSL', 'false').lower() in ('1', 'true', 'yes'),
         )
     }
 else:
@@ -127,18 +132,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = []
-if RENDER_EXTERNAL_HOSTNAME:
-    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
-for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(','):
-    origin = origin.strip()
-    if origin and origin not in CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS.append(origin)
+for _origin in [
+    f'https://{APP_HOSTNAME}' if APP_HOSTNAME else None,
+    f'https://{RENDER_EXTERNAL_HOSTNAME}' if RENDER_EXTERNAL_HOSTNAME else None,
+    *os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(','),
+]:
+    _o = (_origin or '').strip()
+    if _o and _o not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_o)
 
-if IS_RENDER:
+if IS_PRODUCTION:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = os.environ.get(
-        'SECURE_SSL_REDIRECT', 'true',
-    ).lower() in ('1', 'true', 'yes')
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'true').lower() in ('1', 'true', 'yes')
 
 SITE_CONTACTS = {
     'phone': '066 320 28 62',

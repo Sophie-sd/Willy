@@ -1,12 +1,23 @@
+import datetime
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import include, path
+from django.views.decorators.http import require_GET
 
 from catalog import views as catalog_views
 
+
+@require_GET
+def healthz(request):
+    return JsonResponse({'status': 'ok', 'timestamp': datetime.datetime.now().isoformat()})
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('healthz/', healthz, name='healthz'),
     path('', include('core.urls')),
     path('catalog/', include('catalog.urls')),
     path('cart/', include('cart.urls', namespace='cart')),

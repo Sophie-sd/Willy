@@ -1,0 +1,24 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+.venv
+venv
+__pycache__
+*.py[cod]
+*.sqlite3
+db.sqlite3
+staticfiles/
+media/
+.DS_Store
+node_modules
+*.log
+certbot/
+deploy/nginx/ssl/
+docs/
+scripts/
+*.md
+README*
+render.yaml
+Willi\ Home.dc.html
