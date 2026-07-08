@@ -1,7 +1,18 @@
 from django.shortcuts import redirect, render
 
 from catalog.models import AnimalCategory, Product
-from core.content_services import get_reviews_for_block, is_google_reviews_configured
+from core.content_services import (
+    get_contacts_page,
+    get_delivery_page,
+    get_delivery_sections,
+    get_faq_page,
+    get_google_maps_url,
+    get_home_blocks,
+    get_map_embed_url,
+    get_promotions_page,
+    get_reviews_for_block,
+    get_site_contacts,
+)
 from core.models import HeroSlide, HomeBlock
 
 
