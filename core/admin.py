@@ -5,6 +5,8 @@ from django.utils.html import format_html
 from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin, TabularInline
 
+from core.content_services import is_google_reviews_configured
+
 from .models import (
     ContentPage,
     DeliveryItem,
@@ -220,7 +222,7 @@ class HomeBlockAdmin(ModelAdmin):
         return format_html(
             '<span style="color:#b45309">⚠ Google Maps ще не підключено. '
             'Додайте GOOGLE_PLACES_API_KEY у .env і Place ID у налаштуваннях сайту. '
-            'Поки що використовуйте «З розділу «Відгуки»» або «Свої відгуки».</span>',
+            'Поки що використовуйте розділ «Відгуки» або «Свої відгуки».</span>',
         )
 
     @admin.display(description='Превʼю')
