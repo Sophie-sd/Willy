@@ -120,50 +120,108 @@ class ReviewAdmin(ModelAdmin):
 
 @admin.register(HomeBlock)
 class HomeBlockAdmin(ModelAdmin):
-    list_display = ('label', 'key', 'is_visible', 'heading')
+    list_display = ('label', 'is_visible', 'text_mode_label', 'heading_preview')
     list_editable = ('is_visible',)
-    list_filter = ('key', 'is_visible')
+    list_filter = ('key', 'is_visible', 'text_mode')
     search_fields = ('label', 'heading', 'eyebrow')
-    readonly_fields = ('key', 'label', 'image_preview')
+    readonly_fields = ('key', 'label', 'image_preview', 'google_sync_status')
     ordering = ('key',)
 
     def get_fieldsets(self, request, obj=None):
-        common = [
-            ('Відображення', {'fields': ('is_visible',)}),
-        ]
+        visibility = ('Відображення на сайті', {
+            'fields': ('is_visible',),
+            'description': 'Вимкніть перемикач, щоб повністю приховати блок на головній сторінці.',
+        })
+        texts = ('Тексти заголовка', {
+            'fields': ('text_mode', 'eyebrow', 'heading'),
+            'description': (
+                'Оберіть «Стандартні тексти», щоб залишити як зараз на сайті, '
+                'або «Свої тексти» — і заповніть поля нижче.'
+            ),
+        })
         if not obj:
-            return common
+            return [visibility]
 
-        text_fields = ('eyebrow', 'heading', 'subheading')
         if obj.key == HomeBlock.KEY_CATEGORIES:
-            return common + [
-                ('Тексти', {'fields': text_fields[:2]}),
-            ]
+            return [visibility, texts]
+
         if obj.key == HomeBlock.KEY_SALE:
-            return common + [
-                ('Тексти', {'fields': text_fields[:2]}),
-            ]
+            return [visibility, texts]
+
         if obj.key == HomeBlock.KEY_REVIEWS:
-            return common + [
-                ('Тексти', {'fields': text_fields[:2]}),
-                ('Зображення', {
+            fieldsets = [
+                visibility,
+                texts,
+                ('Відгуки клієнтів', {
+                    'fields': ('reviews_source', 'google_sync_status'),
+                    'description': (
+                        'Оберіть, звідки показувати відгуки. '
+                        'Для Google Maps потрібен API-ключ і Place ID у налаштуваннях сайту.'
+                    ),
+                }),
+                ('Свої відгуки', {
+                    'fields': (
+                        'custom_review_1_text', 'custom_review_1_author',
+                        'custom_review_2_text', 'custom_review_2_author',
+                        'custom_review_3_text', 'custom_review_3_author',
+                    ),
+                    'description': (
+                        'Заповнюйте, лише якщо обрано «Свої відгуки». '
+                        'Можна додати від 1 до 3 відгуків.'
+                    ),
+                }),
+                ('Фон секції', {
                     'fields': ('image', 'image_preview'),
-                    'description': 'Фон секції відгуків. Рекомендовано: 1440×800 px.',
+                    'description': 'За бажанням — своє фонове зображення. Рекомендовано: 1440×800 px.',
                 }),
             ]
+            return fieldsets
+
         if obj.key == HomeBlock.KEY_CTA:
-            return common + [
-                ('Тексти', {'fields': text_fields[:2]}),
-                ('Переваги', {'fields': ('perk_1', 'perk_2', 'perk_3')}),
-                ('Кнопка', {'fields': ('cta_text', 'cta_url')}),
+            return [
+                visibility,
+                texts,
+                ('Переваги', {
+                    'fields': ('perk_1', 'perk_2', 'perk_3'),
+                    'description': 'Три короткі рядки з перевагами під заголовком.',
+                }),
+                ('Кнопка', {
+                    'fields': ('cta_text', 'cta_url'),
+                    'description': 'Текст і посилання кнопки внизу блоку.',
+                }),
             ]
-        return common
+        return [visibility]
 
     def has_add_permission(self, request) -> bool:
         return False
 
     def has_delete_permission(self, request, obj=None) -> bool:
         return False
+
+    @admin.display(description='Тексти')
+    def text_mode_label(self, obj):
+        return obj.get_text_mode_display()
+
+    @admin.display(description='Заголовок')
+    def heading_preview(self, obj):
+        from core.content_services import DEFAULT_HOME_BLOCKS, _resolve_block_texts
+        texts = _resolve_block_texts(obj)
+        return texts.get('heading') or '—'
+
+    @admin.display(description='Статус Google Maps')
+    def google_sync_status(self, obj):
+        if not obj or obj.key != HomeBlock.KEY_REVIEWS:
+            return '—'
+        if is_google_reviews_configured():
+            return format_html(
+                '<span style="color:#15803d">✓ Google Maps підключено — '
+                'можна обрати «Автоматично з Google Maps»</span>',
+            )
+        return format_html(
+            '<span style="color:#b45309">⚠ Google Maps ще не підключено. '
+            'Додайте GOOGLE_PLACES_API_KEY у .env і Place ID у налаштуваннях сайту. '
+            'Поки що використовуйте «З розділу «Відгуки»» або «Свої відгуки».</span>',
+        )
 
     @admin.display(description='Превʼю')
     def image_preview(self, obj):

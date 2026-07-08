@@ -1,19 +1,8 @@
 from django.shortcuts import redirect, render
 
 from catalog.models import AnimalCategory, Product
-from core.content_services import (
-    get_contacts_page,
-    get_delivery_page,
-    get_delivery_sections,
-    get_faq_page,
-    get_google_maps_url,
-    get_home_blocks,
-    get_map_embed_url,
-    get_promotions_page,
-    get_reviews,
-    get_site_contacts,
-)
-from core.models import HeroSlide
+from core.content_services import get_reviews_for_block, is_google_reviews_configured
+from core.models import HeroSlide, HomeBlock
 
 
 def home(request):
@@ -21,11 +10,12 @@ def home(request):
     sale_products = Product.objects.sale_active().filter(is_available=True)[:4]
     site_contacts = get_site_contacts()
     blocks = get_home_blocks()
+    reviews_block = HomeBlock.objects.filter(key=HomeBlock.KEY_REVIEWS).first()
     return render(request, 'core/home.html', {
         'categories': categories,
         'sale_products': sale_products,
         'hero_slides': HeroSlide.objects.filter(is_active=True).order_by('order'),
-        'reviews': get_reviews(),
+        'reviews': get_reviews_for_block(reviews_block),
         'blocks': blocks,
         'block_cta': blocks['cta'],
         'google_maps_url': site_contacts.get('google_maps_url') or get_google_maps_url(),

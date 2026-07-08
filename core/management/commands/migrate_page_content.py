@@ -153,10 +153,18 @@ class Command(BaseCommand):
             self.stdout.write('HeroSlide — already exists, skipped')
 
         for key, defaults in DEFAULT_HOME_BLOCKS.items():
-            HomeBlock.objects.update_or_create(
+            seed_defaults = {
+                **defaults,
+                'text_mode': defaults.get('text_mode', HomeBlock.TEXT_DEFAULT),
+            }
+            if key == HomeBlock.KEY_REVIEWS:
+                seed_defaults['reviews_source'] = HomeBlock.REVIEWS_ADMIN
+            _, created = HomeBlock.objects.get_or_create(
                 key=key,
-                defaults=defaults,
+                defaults=seed_defaults,
             )
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'HomeBlock "{key}" — created'))
         self.stdout.write(self.style.SUCCESS(f'HomeBlock — {len(DEFAULT_HOME_BLOCKS)} items'))
 
         if not DeliverySection.objects.exists():

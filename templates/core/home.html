@@ -78,7 +78,7 @@
 {% if block.is_visible %}
 <section class="reviews-section" aria-label="Відгуки">
   <div class="reviews-section__media" aria-hidden="true">
-    {% if block.image %}
+    {% if block.image and block.image.url %}
     <img
       src="{{ block.image.url }}"
       alt=""

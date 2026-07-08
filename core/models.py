@@ -215,23 +215,71 @@ class HomeBlock(models.Model):
         (KEY_CTA, 'CTA-блок'),
     ]
 
+    TEXT_DEFAULT = 'default'
+    TEXT_CUSTOM = 'custom'
+    TEXT_MODE_CHOICES = [
+        (TEXT_DEFAULT, 'Стандартні тексти'),
+        (TEXT_CUSTOM, 'Свої тексти'),
+    ]
+
+    REVIEWS_GOOGLE = 'google'
+    REVIEWS_ADMIN = 'admin'
+    REVIEWS_CUSTOM = 'custom'
+    REVIEWS_SAMPLES = 'samples'
+    REVIEWS_SOURCE_CHOICES = [
+        (REVIEWS_GOOGLE, 'Автоматично з Google Maps'),
+        (REVIEWS_ADMIN, 'З розділу «Відгуки»'),
+        (REVIEWS_CUSTOM, 'Свої відгуки (вписати нижче)'),
+        (REVIEWS_SAMPLES, 'Приклади за замовчуванням'),
+    ]
+
     key = models.SlugField('Ключ', unique=True, choices=KEY_CHOICES)
     label = models.CharField('Назва в адмінці', max_length=64)
-    is_visible = models.BooleanField('Показувати', default=True)
-    eyebrow = models.CharField('Eyebrow', max_length=128, blank=True)
+    is_visible = models.BooleanField(
+        'Показувати на головній',
+        default=True,
+        help_text='Вимкніть, щоб повністю приховати цей блок на сайті.',
+    )
+    text_mode = models.CharField(
+        'Тексти заголовка',
+        max_length=16,
+        choices=TEXT_MODE_CHOICES,
+        default=TEXT_DEFAULT,
+        help_text='«Стандартні» — тексти як на сайті за замовчуванням. «Свої» — поля нижче.',
+    )
+    reviews_source = models.CharField(
+        'Звідки брати відгуки',
+        max_length=16,
+        choices=REVIEWS_SOURCE_CHOICES,
+        default=REVIEWS_ADMIN,
+        blank=True,
+        help_text='Лише для блоку «Відгуки».',
+    )
+    eyebrow = models.CharField(
+        'Підпис над заголовком',
+        max_length=128,
+        blank=True,
+        help_text='Невеликий рядок над основним заголовком.',
+    )
     heading = models.CharField('Заголовок', max_length=128, blank=True)
     subheading = models.CharField('Підзаголовок', max_length=255, blank=True)
     image = models.ImageField(
-        'Зображення',
+        'Фонове зображення',
         upload_to='blocks/',
         blank=True,
-        help_text='Фонове зображення. Рекомендовано: 1440×800 px, JPG/WebP, до 2 МБ',
+        help_text='Рекомендовано: 1440×800 px, JPG/WebP, до 2 МБ',
     )
     perk_1 = models.CharField('Перевага 1', max_length=128, blank=True)
     perk_2 = models.CharField('Перевага 2', max_length=128, blank=True)
     perk_3 = models.CharField('Перевага 3', max_length=128, blank=True)
     cta_text = models.CharField('Текст кнопки', max_length=64, blank=True)
     cta_url = models.CharField('Посилання кнопки', max_length=128, blank=True)
+    custom_review_1_text = models.TextField('Відгук 1 — текст', blank=True)
+    custom_review_1_author = models.CharField('Відгук 1 — автор', max_length=128, blank=True)
+    custom_review_2_text = models.TextField('Відгук 2 — текст', blank=True)
+    custom_review_2_author = models.CharField('Відгук 2 — автор', max_length=128, blank=True)
+    custom_review_3_text = models.TextField('Відгук 3 — текст', blank=True)
+    custom_review_3_author = models.CharField('Відгук 3 — автор', max_length=128, blank=True)
 
     class Meta:
         verbose_name = 'Блок головної'

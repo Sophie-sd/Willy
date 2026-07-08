@@ -15,6 +15,8 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_CATEGORIES: {
         'label': 'Категорії',
         'is_visible': True,
+        'text_mode': HomeBlock.TEXT_DEFAULT,
+        'reviews_source': '',
         'eyebrow': 'Що шукаєте?',
         'heading': 'Оберіть категорію',
         'subheading': '',
@@ -27,6 +29,8 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_SALE: {
         'label': 'Акційні товари',
         'is_visible': True,
+        'text_mode': HomeBlock.TEXT_DEFAULT,
+        'reviews_source': '',
         'eyebrow': 'Акція',
         'heading': 'Акційні товари',
         'subheading': '',
@@ -39,6 +43,8 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_REVIEWS: {
         'label': 'Відгуки',
         'is_visible': True,
+        'text_mode': HomeBlock.TEXT_DEFAULT,
+        'reviews_source': HomeBlock.REVIEWS_ADMIN,
         'eyebrow': 'Відгуки',
         'heading': 'Що кажуть клієнти',
         'subheading': '',
@@ -51,6 +57,8 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_CTA: {
         'label': 'CTA-блок',
         'is_visible': True,
+        'text_mode': HomeBlock.TEXT_DEFAULT,
+        'reviews_source': '',
         'eyebrow': 'Доставка по всій Україні',
         'heading': 'Готові зробити замовлення?',
         'subheading': '',
@@ -61,6 +69,11 @@ DEFAULT_HOME_BLOCKS = {
         'cta_url': '/catalog/',
     },
 }
+
+TEXT_FIELD_KEYS = (
+    'eyebrow', 'heading', 'subheading',
+    'perk_1', 'perk_2', 'perk_3', 'cta_text', 'cta_url',
+)
 
 
 def get_site_contacts():
@@ -92,26 +105,75 @@ def get_faq_page():
 
 
 def get_reviews():
-    reviews = list(
-        Review.objects.filter(
-            is_published=True,
-            show_on_homepage=True,
-            source=Review.SOURCE_GOOGLE,
-        ).order_by('-created_at').values('text', 'author', 'rating'),
-    )
-    if reviews:
-        return reviews
+    return get_reviews_for_block(None)
 
-    reviews = list(
-        Review.objects.filter(
-            is_published=True,
-            show_on_homepage=True,
-        ).order_by('-created_at').values('text', 'author', 'rating'),
-    )
-    if reviews:
-        return reviews
 
+def _default_review_samples():
     return [{**item, 'rating': 5} for item in REVIEWS]
+
+
+def _reviews_from_queryset(queryset):
+    return list(queryset.order_by('-created_at').values('text', 'author', 'rating'))
+
+
+def is_google_reviews_configured():
+    import os
+    from core.models import SiteSettings
+
+    api_key = os.environ.get('GOOGLE_PLACES_API_KEY', '').strip()
+    if not api_key:
+        return False
+    try:
+        settings_obj = SiteSettings.objects.get(pk=1)
+        return bool(settings_obj.google_place_id)
+    except SiteSettings.DoesNotExist:
+        return False
+
+
+def get_reviews_for_block(block):
+    source = HomeBlock.REVIEWS_ADMIN
+    if block is not None:
+        source = getattr(block, 'reviews_source', None) or HomeBlock.REVIEWS_ADMIN
+
+    if source == HomeBlock.REVIEWS_CUSTOM:
+        reviews = []
+        if block is not None:
+            for index in range(1, 4):
+                text = getattr(block, f'custom_review_{index}_text', '').strip()
+                author = getattr(block, f'custom_review_{index}_author', '').strip()
+                if text:
+                    reviews.append({
+                        'text': text,
+                        'author': author or 'Клієнт',
+                        'rating': 5,
+                    })
+        return reviews or _default_review_samples()
+
+    if source == HomeBlock.REVIEWS_SAMPLES:
+        return _default_review_samples()
+
+    if source == HomeBlock.REVIEWS_GOOGLE:
+        google_reviews = _reviews_from_queryset(
+            Review.objects.filter(
+                is_published=True,
+                show_on_homepage=True,
+                source=Review.SOURCE_GOOGLE,
+            ),
+        )
+        if google_reviews:
+            return google_reviews
+        admin_reviews = _reviews_from_queryset(
+            Review.objects.filter(is_published=True, show_on_homepage=True),
+        )
+        return admin_reviews or _default_review_samples()
+
+    admin_reviews = _reviews_from_queryset(
+        Review.objects.filter(is_published=True, show_on_homepage=True),
+    )
+    if admin_reviews:
+        return admin_reviews
+
+    return _default_review_samples()
 
 
 def get_map_embed_url():
@@ -144,7 +206,21 @@ def get_contacts_page():
 
 def _home_block_fallback(key):
     defaults = DEFAULT_HOME_BLOCKS[key]
-    return SimpleNamespace(key=key, image=None, image_url=None, **defaults)
+    return SimpleNamespace(
+        key=key,
+        image=None,
+        text_mode=defaults.get('text_mode', HomeBlock.TEXT_DEFAULT),
+        reviews_source=defaults.get('reviews_source', ''),
+        **{field: defaults.get(field, '') for field in TEXT_FIELD_KEYS},
+    )
+
+
+def _resolve_block_texts(block):
+    defaults = DEFAULT_HOME_BLOCKS[block.key]
+    text_mode = getattr(block, 'text_mode', HomeBlock.TEXT_DEFAULT)
+    if text_mode == HomeBlock.TEXT_DEFAULT:
+        return {field: defaults.get(field, '') for field in TEXT_FIELD_KEYS}
+    return {field: getattr(block, field, '') or defaults.get(field, '') for field in TEXT_FIELD_KEYS}
 
 
 def get_home_blocks():
@@ -153,7 +229,16 @@ def get_home_blocks():
     for key in DEFAULT_HOME_BLOCKS:
         block = stored.get(key)
         if block:
-            blocks[key] = block
+            texts = _resolve_block_texts(block)
+            blocks[key] = SimpleNamespace(
+                key=block.key,
+                label=block.label,
+                is_visible=block.is_visible,
+                text_mode=block.text_mode,
+                reviews_source=block.reviews_source,
+                image=block.image,
+                **texts,
+            )
         else:
             blocks[key] = _home_block_fallback(key)
     return blocks
