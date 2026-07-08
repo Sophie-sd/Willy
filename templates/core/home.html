@@ -12,11 +12,13 @@
 {% block content %}
 {% include 'partials/hero_banner.html' %}
 
+{% with block=blocks.categories %}
+{% if block.is_visible %}
 <section class="section">
   <div class="container">
     <div style="text-align:center;margin-bottom:40px;">
-      <div class="section__eyebrow">Що шукаєте?</div>
-      <h2 class="section__title">Оберіть категорію</h2>
+      {% if block.eyebrow %}<div class="section__eyebrow">{{ block.eyebrow }}</div>{% endif %}
+      {% if block.heading %}<h2 class="section__title">{{ block.heading }}</h2>{% endif %}
     </div>
     <div class="category-cards">
       {% for cat in categories %}
@@ -34,13 +36,17 @@
     </div>
   </div>
 </section>
+{% endif %}
+{% endwith %}
 
+{% with block=blocks.sale_products %}
+{% if block.is_visible %}
 <section class="section section--cream">
   <div class="container">
     <div class="sale-section__head">
       <div>
-        <span class="sale-section__badge">Акція</span>
-        <h2 class="section__title">Акційні товари</h2>
+        {% if block.eyebrow %}<span class="sale-section__badge">{{ block.eyebrow }}</span>{% endif %}
+        {% if block.heading %}<h2 class="section__title">{{ block.heading }}</h2>{% endif %}
       </div>
       <a href="{% url 'promotions' %}" class="sale-section__link">Переглянути всі →</a>
     </div>
@@ -65,9 +71,23 @@
     </div>
   </div>
 </section>
+{% endif %}
+{% endwith %}
 
+{% with block=blocks.reviews %}
+{% if block.is_visible %}
 <section class="reviews-section" aria-label="Відгуки">
   <div class="reviews-section__media" aria-hidden="true">
+    {% if block.image %}
+    <img
+      src="{{ block.image.url }}"
+      alt=""
+      width="1024"
+      height="683"
+      loading="lazy"
+      decoding="async"
+    >
+    {% else %}
     <img
       src="{% static 'images/reviews/reviews-bg.png' %}"
       alt=""
@@ -76,12 +96,13 @@
       loading="lazy"
       decoding="async"
     >
+    {% endif %}
   </div>
   <div class="reviews-section__glass" aria-hidden="true"></div>
   <div class="reviews-section__inner">
     <header class="reviews-section__head">
-      <div class="reviews-section__eyebrow">Відгуки</div>
-      <h2 class="reviews-section__title">Що кажуть клієнти</h2>
+      {% if block.eyebrow %}<div class="reviews-section__eyebrow">{{ block.eyebrow }}</div>{% endif %}
+      {% if block.heading %}<h2 class="reviews-section__title">{{ block.heading }}</h2>{% endif %}
     </header>
 
     {% include 'partials/reviews_showcase.html' %}
@@ -91,8 +112,12 @@
     </div>
   </div>
 </section>
+{% endif %}
+{% endwith %}
 
+{% if blocks.cta.is_visible %}
 {% include 'partials/cta_band.html' %}
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

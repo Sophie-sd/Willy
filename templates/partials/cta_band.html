@@ -1,27 +1,37 @@
 <section class="cta-band" aria-label="Замовлення">
   <div class="container cta-band__inner">
     <header class="cta-band__header">
-      <p class="cta-band__eyebrow">Доставка по всій Україні</p>
-      <h2 class="cta-band__title">Готові зробити замовлення?</h2>
+      {% if block_cta.eyebrow %}<p class="cta-band__eyebrow">{{ block_cta.eyebrow }}</p>{% endif %}
+      {% if block_cta.heading %}<h2 class="cta-band__title">{{ block_cta.heading }}</h2>{% endif %}
     </header>
 
     <div class="cta-band__perks">
+      {% if block_cta.perk_1 %}
       <div class="cta-band__perk">
         <span class="cta-band__perk-icon" aria-hidden="true">✓</span>
-        <p class="cta-band__perk-text">Доставка Новою Поштою та Укрпоштою</p>
+        <p class="cta-band__perk-text">{{ block_cta.perk_1 }}</p>
       </div>
+      {% endif %}
+      {% if block_cta.perk_2 %}
       <div class="cta-band__perk">
         <span class="cta-band__perk-icon" aria-hidden="true">✓</span>
-        <p class="cta-band__perk-text">Перевірені бренди для ваших улюбленців</p>
+        <p class="cta-band__perk-text">{{ block_cta.perk_2 }}</p>
       </div>
+      {% endif %}
+      {% if block_cta.perk_3 %}
       <div class="cta-band__perk">
         <span class="cta-band__perk-icon" aria-hidden="true">✓</span>
-        <p class="cta-band__perk-text">Магазин у Києві — {{ site_contacts.hours }}</p>
+        <p class="cta-band__perk-text">{{ block_cta.perk_3 }} — {{ site_contacts.hours }}</p>
       </div>
+      {% endif %}
     </div>
 
     <footer class="cta-band__footer">
+      {% if block_cta.cta_text and block_cta.cta_url %}
+      <a href="{{ block_cta.cta_url }}" class="btn btn--primary cta-band__btn">{{ block_cta.cta_text }}</a>
+      {% else %}
       <a href="{% url 'catalog:product_list' %}" class="btn btn--primary cta-band__btn">Перейти в каталог</a>
+      {% endif %}
       <p class="cta-band__phone">
         або <a href="tel:{{ site_contacts.phone_href }}">зателефонуйте — {{ site_contacts.phone }}</a>
       </p>

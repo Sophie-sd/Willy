@@ -12,8 +12,8 @@
 {% include 'partials/info_layout_start.html' %}
 
     <div class="delivery-steps">
-      {% for section in page.sections %}
-      <section class="delivery-step" id="{{ section.id }}">
+      {% for section in delivery_sections %}
+      <section class="delivery-step" id="{{ section.section_id }}">
         <div class="delivery-step__head">
           <span class="delivery-step__num" aria-hidden="true">{{ section.step }}</span>
           <div>

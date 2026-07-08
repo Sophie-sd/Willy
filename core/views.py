@@ -4,8 +4,10 @@ from catalog.models import AnimalCategory, Product
 from core.content_services import (
     get_contacts_page,
     get_delivery_page,
+    get_delivery_sections,
     get_faq_page,
     get_google_maps_url,
+    get_home_blocks,
     get_map_embed_url,
     get_promotions_page,
     get_reviews,
@@ -18,11 +20,14 @@ def home(request):
     categories = AnimalCategory.objects.filter(is_active=True)
     sale_products = Product.objects.sale_active().filter(is_available=True)[:4]
     site_contacts = get_site_contacts()
+    blocks = get_home_blocks()
     return render(request, 'core/home.html', {
         'categories': categories,
         'sale_products': sale_products,
         'hero_slides': HeroSlide.objects.filter(is_active=True).order_by('order'),
         'reviews': get_reviews(),
+        'blocks': blocks,
+        'block_cta': blocks['cta'],
         'google_maps_url': site_contacts.get('google_maps_url') or get_google_maps_url(),
     })
 
@@ -41,6 +46,7 @@ def delivery(request):
     page = get_delivery_page()
     return render(request, 'core/delivery.html', {
         'page': page,
+        'delivery_sections': get_delivery_sections(),
         'breadcrumbs': [{'label': page['title']}],
     })
 

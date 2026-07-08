@@ -72,6 +72,82 @@ UNFOLD = {
                 ],
             },
             {
+                'title': 'Головна сторінка',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Банери (hero)',
+                        'icon': 'view_carousel',
+                        'link': reverse_lazy('admin:core_heroslide_changelist'),
+                    },
+                    {
+                        'title': 'Блоки головної',
+                        'icon': 'dashboard_customize',
+                        'link': reverse_lazy('admin:core_homeblock_changelist'),
+                    },
+                ],
+            },
+            {
+                'title': 'Акції',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Заголовок сторінки',
+                        'icon': 'local_offer',
+                        'link': '/admin/core/contentpage/?slug=promotions',
+                    },
+                ],
+            },
+            {
+                'title': 'Доставка',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Заголовок сторінки',
+                        'icon': 'local_shipping',
+                        'link': '/admin/core/contentpage/?slug=delivery',
+                    },
+                    {
+                        'title': 'Кроки доставки',
+                        'icon': 'list_alt',
+                        'link': reverse_lazy('admin:core_deliverysection_changelist'),
+                    },
+                ],
+            },
+            {
+                'title': 'FAQ',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Заголовок сторінки',
+                        'icon': 'article',
+                        'link': '/admin/core/contentpage/?slug=faq',
+                    },
+                    {
+                        'title': 'Питання та відповіді',
+                        'icon': 'help',
+                        'link': reverse_lazy('admin:core_faqitem_changelist'),
+                    },
+                ],
+            },
+            {
+                'title': 'Контакти',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Налаштування сайту',
+                        'icon': 'contact_page',
+                        'link': reverse_lazy('admin:core_sitesettings_changelist'),
+                    },
+                    {
+                        'title': 'Відгуки',
+                        'icon': 'reviews',
+                        'link': reverse_lazy('admin:core_review_changelist'),
+                        'badge': 'core.dashboard.pending_reviews_badge',
+                    },
+                ],
+            },
+            {
                 'title': 'Каталог',
                 'separator': True,
                 'items': [
@@ -100,53 +176,6 @@ UNFOLD = {
                         'icon': 'receipt_long',
                         'link': reverse_lazy('admin:orders_order_changelist'),
                         'badge': 'core.dashboard.new_orders_badge',
-                    },
-                ],
-            },
-            {
-                'title': 'Сайт — контент',
-                'separator': True,
-                'items': [
-                    {
-                        'title': 'Банери (hero)',
-                        'icon': 'view_carousel',
-                        'link': reverse_lazy('admin:core_heroslide_changelist'),
-                    },
-                    {
-                        'title': 'Сторінка «Акції»',
-                        'icon': 'local_offer',
-                        'link': '/admin/core/contentpage/?slug=promotions',
-                    },
-                    {
-                        'title': 'Сторінка «Доставка»',
-                        'icon': 'local_shipping',
-                        'link': '/admin/core/contentpage/?slug=delivery',
-                    },
-                    {
-                        'title': 'Сторінка «Контакти»',
-                        'icon': 'contact_page',
-                        'link': reverse_lazy('admin:core_sitesettings_changelist'),
-                    },
-                    {
-                        'title': 'Сторінка «FAQ»',
-                        'icon': 'help',
-                        'link': reverse_lazy('admin:core_faqitem_changelist'),
-                    },
-                ],
-            },
-            {
-                'title': 'Контент',
-                'items': [
-                    {
-                        'title': 'Відгуки',
-                        'icon': 'reviews',
-                        'link': reverse_lazy('admin:core_review_changelist'),
-                        'badge': 'core.dashboard.pending_reviews_badge',
-                    },
-                    {
-                        'title': 'Сторінки',
-                        'icon': 'article',
-                        'link': reverse_lazy('admin:core_contentpage_changelist'),
                     },
                 ],
             },

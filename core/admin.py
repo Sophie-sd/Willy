@@ -3,24 +3,28 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.html import format_html
 from tinymce.widgets import TinyMCE
-from unfold.admin import ModelAdmin
+from unfold.admin import ModelAdmin, TabularInline
 
-from .models import ContentPage, FaqItem, HeroSlide, Review, SiteSettings
+from .models import (
+    ContentPage,
+    DeliveryItem,
+    DeliverySection,
+    FaqItem,
+    HeroSlide,
+    HomeBlock,
+    Review,
+    SiteSettings,
+)
 
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ModelAdmin):
     fieldsets = (
         ('Контакти', {
-            'fields': ('name', 'phone', 'phone_intl', 'phone_href', 'email', 'address', 'hours'),
+            'fields': ('name', 'phone', 'email', 'address', 'hours'),
         }),
         ('Карта Google', {
-            'fields': ('map_embed_url', 'google_maps_url', 'map_lat', 'map_lng', 'google_place_id'),
-            'description': (
-                'Вставте src з iframe Google Maps у поле «Код карти». '
-                'Рекомендований розмір карти: 600×450 px. '
-                'Для імпорту відгуків запустіть: python3 manage.py sync_google_reviews'
-            ),
+            'fields': ('map_embed_url', 'google_maps_url'),
         }),
     )
 
@@ -114,6 +118,85 @@ class ReviewAdmin(ModelAdmin):
         return format_html('<span title="{}">{}</span>', obj.text, text)
 
 
+@admin.register(HomeBlock)
+class HomeBlockAdmin(ModelAdmin):
+    list_display = ('label', 'key', 'is_visible', 'heading')
+    list_editable = ('is_visible',)
+    list_filter = ('key', 'is_visible')
+    search_fields = ('label', 'heading', 'eyebrow')
+    readonly_fields = ('key', 'label', 'image_preview')
+    ordering = ('key',)
+
+    def get_fieldsets(self, request, obj=None):
+        common = [
+            ('Відображення', {'fields': ('is_visible',)}),
+        ]
+        if not obj:
+            return common
+
+        text_fields = ('eyebrow', 'heading', 'subheading')
+        if obj.key == HomeBlock.KEY_CATEGORIES:
+            return common + [
+                ('Тексти', {'fields': text_fields[:2]}),
+            ]
+        if obj.key == HomeBlock.KEY_SALE:
+            return common + [
+                ('Тексти', {'fields': text_fields[:2]}),
+            ]
+        if obj.key == HomeBlock.KEY_REVIEWS:
+            return common + [
+                ('Тексти', {'fields': text_fields[:2]}),
+                ('Зображення', {
+                    'fields': ('image', 'image_preview'),
+                    'description': 'Фон секції відгуків. Рекомендовано: 1440×800 px.',
+                }),
+            ]
+        if obj.key == HomeBlock.KEY_CTA:
+            return common + [
+                ('Тексти', {'fields': text_fields[:2]}),
+                ('Переваги', {'fields': ('perk_1', 'perk_2', 'perk_3')}),
+                ('Кнопка', {'fields': ('cta_text', 'cta_url')}),
+            ]
+        return common
+
+    def has_add_permission(self, request) -> bool:
+        return False
+
+    def has_delete_permission(self, request, obj=None) -> bool:
+        return False
+
+    @admin.display(description='Превʼю')
+    def image_preview(self, obj):
+        if obj and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:80px;border-radius:8px;object-fit:cover">',
+                obj.image.url,
+            )
+        return '—'
+
+
+class DeliveryItemInline(TabularInline):
+    model = DeliveryItem
+    extra = 0
+    fields = ('label', 'text', 'order')
+    ordering = ('order', 'pk')
+
+
+@admin.register(DeliverySection)
+class DeliverySectionAdmin(ModelAdmin):
+    list_display = ('step', 'title', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('title', 'intro')
+    ordering = ('order', 'pk')
+    inlines = (DeliveryItemInline,)
+    fieldsets = (
+        (None, {
+            'fields': ('step', 'title', 'intro', 'order', 'is_active'),
+        }),
+    )
+
+
 @admin.register(ContentPage)
 class ContentPageAdmin(ModelAdmin):
     list_display = ('title', 'slug', 'header_image_preview')
@@ -131,9 +214,12 @@ class ContentPageAdmin(ModelAdmin):
             'fields': ('header_image', 'header_image_preview'),
             'description': 'Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ.',
         }),
-        ('JSON-дані', {
-            'fields': ('extra_data',),
-            'description': 'sections, cards, note, empty_text, map_embed_url тощо.',
+        ('Додатковий текст', {
+            'fields': ('empty_text', 'note'),
+            'description': (
+                'empty_text — для сторінки «Акції». '
+                'note — підпис внизу сторінки FAQ.'
+            ),
         }),
     )
 

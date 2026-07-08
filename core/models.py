@@ -1,8 +1,43 @@
+import re
+
 from django.db import models
 
 
+def format_phone_fields(phone_raw: str) -> tuple[str, str, str]:
+    """Повертає (display, intl, href) з одного введеного номера."""
+    digits = re.sub(r'\D', '', phone_raw or '')
+    if digits.startswith('380') and len(digits) >= 12:
+        national = digits[3:12]
+    elif digits.startswith('0') and len(digits) >= 10:
+        national = digits[1:10]
+    elif len(digits) == 9:
+        national = digits
+    else:
+        return phone_raw, phone_raw, phone_raw
+
+    display = f'0{national[:2]} {national[2:5]} {national[5:7]} {national[7:9]}'
+    intl = f'+380 {national[:2]} {national[2:5]} {national[5:7]} {national[7:9]}'
+    href = f'+380{national}'
+    return display, intl, href
+
+
+def parse_map_embed_coords(embed_url: str):
+    if not embed_url:
+        return None
+    lat_match = re.search(r'!3d(-?\d+\.?\d*)', embed_url)
+    lng_match = re.search(r'!2d(-?\d+\.?\d*)', embed_url)
+    if lat_match and lng_match:
+        return float(lat_match.group(1)), float(lng_match.group(1))
+    return None
+
+
 class SiteSettings(models.Model):
-    phone = models.CharField('Телефон', max_length=32, default='066 320 28 62')
+    phone = models.CharField(
+        'Телефон',
+        max_length=32,
+        default='066 320 28 62',
+        help_text='Наприклад: 066 320 28 62',
+    )
     phone_intl = models.CharField('Телефон (міжнародний)', max_length=32, default='+380 66 320 28 62')
     phone_href = models.CharField('Телефон (href)', max_length=32, default='+380663202862')
     email = models.EmailField('Email', default='oksanadaragan9@gmail.com')
@@ -12,21 +47,20 @@ class SiteSettings(models.Model):
     map_lat = models.DecimalField('Широта', max_digits=9, decimal_places=6, default=50.466266)
     map_lng = models.DecimalField('Довгота', max_digits=9, decimal_places=6, default=30.354818)
     map_embed_url = models.TextField(
-        'Код карти Google (iframe src)',
+        'Код карти Google',
         blank=True,
-        help_text='Вставте значення src з коду вбудовування Google Maps. Рекомендований розмір: 600×450 px.',
+        help_text='Google Maps → Поділитися → Вбудувати карту → скопіюйте посилання src.',
     )
     google_maps_url = models.URLField(
         'Посилання на Google Maps',
         blank=True,
         max_length=512,
-        help_text='Посилання на сторінку магазину в Google Maps (для кнопки «Відкрити на карті»).',
+        help_text='Посилання на сторінку магазину в Google Maps.',
     )
     google_place_id = models.CharField(
         'Google Place ID',
         max_length=128,
         blank=True,
-        help_text='Для автоматичного імпорту відгуків (заповнюється командою sync_google_reviews).',
     )
 
     class Meta:
@@ -35,6 +69,16 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        display, intl, href = format_phone_fields(self.phone)
+        self.phone = display
+        self.phone_intl = intl
+        self.phone_href = href
+        coords = parse_map_embed_coords(self.map_embed_url)
+        if coords:
+            self.map_lat, self.map_lng = coords
+        super().save(*args, **kwargs)
 
     def as_dict(self):
         return {
@@ -159,6 +203,85 @@ class HeroSlide(models.Model):
         return self.title
 
 
+class HomeBlock(models.Model):
+    KEY_CATEGORIES = 'categories'
+    KEY_SALE = 'sale_products'
+    KEY_REVIEWS = 'reviews'
+    KEY_CTA = 'cta'
+    KEY_CHOICES = [
+        (KEY_CATEGORIES, 'Категорії'),
+        (KEY_SALE, 'Акційні товари'),
+        (KEY_REVIEWS, 'Відгуки'),
+        (KEY_CTA, 'CTA-блок'),
+    ]
+
+    key = models.SlugField('Ключ', unique=True, choices=KEY_CHOICES)
+    label = models.CharField('Назва в адмінці', max_length=64)
+    is_visible = models.BooleanField('Показувати', default=True)
+    eyebrow = models.CharField('Eyebrow', max_length=128, blank=True)
+    heading = models.CharField('Заголовок', max_length=128, blank=True)
+    subheading = models.CharField('Підзаголовок', max_length=255, blank=True)
+    image = models.ImageField(
+        'Зображення',
+        upload_to='blocks/',
+        blank=True,
+        help_text='Фонове зображення. Рекомендовано: 1440×800 px, JPG/WebP, до 2 МБ',
+    )
+    perk_1 = models.CharField('Перевага 1', max_length=128, blank=True)
+    perk_2 = models.CharField('Перевага 2', max_length=128, blank=True)
+    perk_3 = models.CharField('Перевага 3', max_length=128, blank=True)
+    cta_text = models.CharField('Текст кнопки', max_length=64, blank=True)
+    cta_url = models.CharField('Посилання кнопки', max_length=128, blank=True)
+
+    class Meta:
+        verbose_name = 'Блок головної'
+        verbose_name_plural = 'Блоки головної'
+        ordering = ['key']
+
+    def __str__(self):
+        return self.label
+
+
+class DeliverySection(models.Model):
+    step = models.CharField('Крок', max_length=4)
+    title = models.CharField('Заголовок', max_length=128)
+    intro = models.TextField('Вступ', blank=True)
+    order = models.PositiveIntegerField('Порядок', default=0)
+    is_active = models.BooleanField('Активна', default=True)
+
+    class Meta:
+        verbose_name = 'Секція доставки'
+        verbose_name_plural = 'Секції доставки'
+        ordering = ['order', 'pk']
+
+    def __str__(self):
+        return f'{self.step} — {self.title}'
+
+    @property
+    def section_id(self):
+        return f'step-{self.step}'
+
+
+class DeliveryItem(models.Model):
+    section = models.ForeignKey(
+        DeliverySection,
+        related_name='items',
+        on_delete=models.CASCADE,
+        verbose_name='Секція',
+    )
+    label = models.CharField('Підпис', max_length=128)
+    text = models.TextField('Текст')
+    order = models.PositiveIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Пункт доставки'
+        verbose_name_plural = 'Пункти доставки'
+        ordering = ['order', 'pk']
+
+    def __str__(self):
+        return self.label
+
+
 class ContentPage(models.Model):
     slug = models.SlugField('Slug', unique=True)
     title = models.CharField('Заголовок', max_length=128)
@@ -170,6 +293,16 @@ class ContentPage(models.Model):
         upload_to='pages/',
         blank=True,
         help_text='Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ',
+    )
+    empty_text = models.TextField(
+        'Текст порожнього стану',
+        blank=True,
+        help_text='Текст, коли акційних товарів немає',
+    )
+    note = models.TextField(
+        'Підпис внизу сторінки',
+        blank=True,
+        help_text='Підпис внизу сторінки (FAQ тощо)',
     )
     extra_data = models.JSONField('Додаткові дані', default=dict, blank=True)
 
@@ -189,6 +322,14 @@ class ContentPage(models.Model):
         }
         if self.header_image:
             data['header_image_url'] = self.header_image.url
+        if self.empty_text:
+            data['empty_text'] = self.empty_text
+        elif self.extra_data.get('empty_text'):
+            data['empty_text'] = self.extra_data['empty_text']
+        if self.note:
+            data['note'] = self.note
+        elif self.extra_data.get('note'):
+            data['note'] = self.extra_data['note']
         if self.extra_data:
             data.update(self.extra_data)
         return data

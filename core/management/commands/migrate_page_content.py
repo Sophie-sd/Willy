@@ -2,7 +2,17 @@ from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from core.models import ContentPage, FaqItem, HeroSlide, Review, SiteSettings
+from core.models import (
+    ContentPage,
+    DeliveryItem,
+    DeliverySection,
+    FaqItem,
+    HeroSlide,
+    HomeBlock,
+    Review,
+    SiteSettings,
+)
+from core.content_services import DEFAULT_HOME_BLOCKS
 from core.page_content import (
     CONTACTS_PAGE,
     DEFAULT_GOOGLE_MAPS_URL,
@@ -61,9 +71,13 @@ class Command(BaseCommand):
             self.stdout.write('Reviews — already exists, skipped')
 
         pages = [
-            ('promotions', PROMOTIONS_PAGE, {'empty_text': PROMOTIONS_PAGE['empty_text']}),
-            ('delivery', DELIVERY_PAGE, {'sections': DELIVERY_PAGE['sections']}),
-            ('faq', FAQ_PAGE, {'note': FAQ_PAGE['note']}),
+            ('promotions', PROMOTIONS_PAGE, {
+                'empty_text': PROMOTIONS_PAGE['empty_text'],
+            }),
+            ('delivery', DELIVERY_PAGE, {}),
+            ('faq', FAQ_PAGE, {
+                'note': FAQ_PAGE['note'],
+            }),
             ('contacts', CONTACTS_PAGE, {
                 'cards': CONTACTS_PAGE['cards'],
                 'map_embed_url': DEFAULT_MAP_EMBED_URL,
@@ -71,15 +85,21 @@ class Command(BaseCommand):
         ]
 
         for slug, source, extra in pages:
+            page_defaults = {
+                'title': source['title'],
+                'eyebrow': source.get('eyebrow', ''),
+                'lead': source.get('lead', ''),
+                'body': '',
+                'extra_data': extra,
+            }
+            if 'empty_text' in extra:
+                page_defaults['empty_text'] = extra['empty_text']
+            if 'note' in extra:
+                page_defaults['note'] = extra['note']
+
             ContentPage.objects.update_or_create(
                 slug=slug,
-                defaults={
-                    'title': source['title'],
-                    'eyebrow': source.get('eyebrow', ''),
-                    'lead': source.get('lead', ''),
-                    'body': '',
-                    'extra_data': extra,
-                },
+                defaults=page_defaults,
             )
             self.stdout.write(self.style.SUCCESS(f'ContentPage "{slug}" — ok'))
 
@@ -131,5 +151,34 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'HeroSlide — {len(hero_seed)} items'))
         else:
             self.stdout.write('HeroSlide — already exists, skipped')
+
+        for key, defaults in DEFAULT_HOME_BLOCKS.items():
+            HomeBlock.objects.update_or_create(
+                key=key,
+                defaults=defaults,
+            )
+        self.stdout.write(self.style.SUCCESS(f'HomeBlock — {len(DEFAULT_HOME_BLOCKS)} items'))
+
+        if not DeliverySection.objects.exists():
+            for index, section_data in enumerate(DELIVERY_PAGE['sections'], start=1):
+                section = DeliverySection.objects.create(
+                    step=section_data['step'],
+                    title=section_data['title'],
+                    intro=section_data['intro'],
+                    order=index,
+                    is_active=True,
+                )
+                for item_index, item_data in enumerate(section_data['items'], start=1):
+                    DeliveryItem.objects.create(
+                        section=section,
+                        label=item_data['label'],
+                        text=item_data['text'],
+                        order=item_index,
+                    )
+            self.stdout.write(self.style.SUCCESS(
+                f'DeliverySection — {len(DELIVERY_PAGE["sections"])} sections',
+            ))
+        else:
+            self.stdout.write('DeliverySection — already exists, skipped')
 
         self.stdout.write(self.style.SUCCESS('Done.'))
