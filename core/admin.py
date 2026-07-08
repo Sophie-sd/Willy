@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin, TabularInline
 
@@ -210,11 +211,11 @@ class HomeBlockAdmin(ModelAdmin):
         if not obj or obj.key != HomeBlock.KEY_REVIEWS:
             return '—'
         if is_google_reviews_configured():
-            return format_html(
+            return mark_safe(
                 '<span style="color:#15803d">✓ Google Maps підключено — '
                 'можна обрати «Автоматично з Google Maps»</span>',
             )
-        return format_html(
+        return mark_safe(
             '<span style="color:#b45309">⚠ Google Maps ще не підключено. '
             'Додайте GOOGLE_PLACES_API_KEY у .env і Place ID у налаштуваннях сайту. '
             'Поки що використовуйте розділ «Відгуки» або «Свої відгуки».</span>',
