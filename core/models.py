@@ -215,13 +215,6 @@ class HomeBlock(models.Model):
         (KEY_CTA, 'CTA-блок'),
     ]
 
-    TEXT_DEFAULT = 'default'
-    TEXT_CUSTOM = 'custom'
-    TEXT_MODE_CHOICES = [
-        (TEXT_DEFAULT, 'Стандартні тексти'),
-        (TEXT_CUSTOM, 'Свої тексти'),
-    ]
-
     REVIEWS_GOOGLE = 'google'
     REVIEWS_ADMIN = 'admin'
     REVIEWS_CUSTOM = 'custom'
@@ -239,13 +232,6 @@ class HomeBlock(models.Model):
         'Показувати на головній',
         default=True,
         help_text='Вимкніть, щоб повністю приховати цей блок на сайті.',
-    )
-    text_mode = models.CharField(
-        'Тексти заголовка',
-        max_length=16,
-        choices=TEXT_MODE_CHOICES,
-        default=TEXT_DEFAULT,
-        help_text='«Стандартні» — тексти як на сайті за замовчуванням. «Свої» — поля нижче.',
     )
     reviews_source = models.CharField(
         'Звідки брати відгуки',

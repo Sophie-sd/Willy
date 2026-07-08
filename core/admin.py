@@ -6,6 +6,7 @@ from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin, TabularInline
 
 from core.content_services import is_google_reviews_configured
+from core.admin_forms import ContentPageAdminForm, HomeBlockAdminForm
 
 from .models import (
     ContentPage,
@@ -122,9 +123,10 @@ class ReviewAdmin(ModelAdmin):
 
 @admin.register(HomeBlock)
 class HomeBlockAdmin(ModelAdmin):
-    list_display = ('label', 'is_visible', 'text_mode_label', 'heading_preview')
+    form = HomeBlockAdminForm
+    list_display = ('label', 'is_visible', 'heading_preview')
     list_editable = ('is_visible',)
-    list_filter = ('key', 'is_visible', 'text_mode')
+    list_filter = ('key', 'is_visible')
     search_fields = ('label', 'heading', 'eyebrow')
     readonly_fields = ('key', 'label', 'image_preview', 'google_sync_status')
     ordering = ('key',)
@@ -134,12 +136,9 @@ class HomeBlockAdmin(ModelAdmin):
             'fields': ('is_visible',),
             'description': 'Вимкніть перемикач, щоб повністю приховати блок на головній сторінці.',
         })
-        texts = ('Тексти заголовка', {
-            'fields': ('text_mode', 'eyebrow', 'heading'),
-            'description': (
-                'Оберіть «Стандартні тексти», щоб залишити як зараз на сайті, '
-                'або «Свої тексти» — і заповніть поля нижче.'
-            ),
+        texts = ('Тексти блоку', {
+            'fields': ('eyebrow', 'heading'),
+            'description': 'Редагуйте тексти напряму — у полях уже підставлено поточний текст з сайту.',
         })
         if not obj:
             return [visibility]
@@ -161,15 +160,15 @@ class HomeBlockAdmin(ModelAdmin):
                         'Для Google Maps потрібен API-ключ і Place ID у налаштуваннях сайту.'
                     ),
                 }),
-                ('Свої відгуки', {
+                ('Відгуки для показу', {
                     'fields': (
                         'custom_review_1_text', 'custom_review_1_author',
                         'custom_review_2_text', 'custom_review_2_author',
                         'custom_review_3_text', 'custom_review_3_author',
                     ),
                     'description': (
-                        'Заповнюйте, лише якщо обрано «Свої відгуки». '
-                        'Можна додати від 1 до 3 відгуків.'
+                        'Заповнюйте, якщо обрано «Свої відгуки». '
+                        'У полях уже підставлено приклади — можна змінити або залишити.'
                     ),
                 }),
                 ('Фон секції', {
@@ -185,7 +184,7 @@ class HomeBlockAdmin(ModelAdmin):
                 texts,
                 ('Переваги', {
                     'fields': ('perk_1', 'perk_2', 'perk_3'),
-                    'description': 'Три короткі рядки з перевагами під заголовком.',
+                    'description': 'Три короткі рядки з перевагами під заголовком. Текст можна змінити напряму.',
                 }),
                 ('Кнопка', {
                     'fields': ('cta_text', 'cta_url'),
@@ -199,10 +198,6 @@ class HomeBlockAdmin(ModelAdmin):
 
     def has_delete_permission(self, request, obj=None) -> bool:
         return False
-
-    @admin.display(description='Тексти')
-    def text_mode_label(self, obj):
-        return obj.get_text_mode_display()
 
     @admin.display(description='Заголовок')
     def heading_preview(self, obj):
@@ -259,6 +254,7 @@ class DeliverySectionAdmin(ModelAdmin):
 
 @admin.register(ContentPage)
 class ContentPageAdmin(ModelAdmin):
+    form = ContentPageAdminForm
     list_display = ('title', 'slug', 'header_image_preview')
     search_fields = ('title', 'slug', 'lead')
     readonly_fields = ('header_image_preview',)
@@ -266,8 +262,8 @@ class ContentPageAdmin(ModelAdmin):
         (None, {
             'fields': ('slug', 'title', 'eyebrow', 'lead', 'body'),
             'description': (
-                'Заголовок — до 128 символів. Eyebrow — до 128 символів. '
-                'Lead — короткий вступний текст.'
+                'У полях уже підставлено поточний текст з сайту — редагуйте напряму. '
+                'Заголовок — до 128 символів. Eyebrow — до 128 символів.'
             ),
         }),
         ('Зображення', {
@@ -278,7 +274,7 @@ class ContentPageAdmin(ModelAdmin):
             'fields': ('empty_text', 'note'),
             'description': (
                 'empty_text — для сторінки «Акції». '
-                'note — підпис внизу сторінки FAQ.'
+                'note — підпис внизу сторінки FAQ. Текст можна змінити напряму.'
             ),
         }),
     )

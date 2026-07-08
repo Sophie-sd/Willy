@@ -15,7 +15,6 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_CATEGORIES: {
         'label': 'Категорії',
         'is_visible': True,
-        'text_mode': HomeBlock.TEXT_DEFAULT,
         'reviews_source': '',
         'eyebrow': 'Що шукаєте?',
         'heading': 'Оберіть категорію',
@@ -29,7 +28,6 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_SALE: {
         'label': 'Акційні товари',
         'is_visible': True,
-        'text_mode': HomeBlock.TEXT_DEFAULT,
         'reviews_source': '',
         'eyebrow': 'Акція',
         'heading': 'Акційні товари',
@@ -43,7 +41,6 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_REVIEWS: {
         'label': 'Відгуки',
         'is_visible': True,
-        'text_mode': HomeBlock.TEXT_DEFAULT,
         'reviews_source': HomeBlock.REVIEWS_ADMIN,
         'eyebrow': 'Відгуки',
         'heading': 'Що кажуть клієнти',
@@ -57,7 +54,6 @@ DEFAULT_HOME_BLOCKS = {
     HomeBlock.KEY_CTA: {
         'label': 'CTA-блок',
         'is_visible': True,
-        'text_mode': HomeBlock.TEXT_DEFAULT,
         'reviews_source': '',
         'eyebrow': 'Доставка по всій Україні',
         'heading': 'Готові зробити замовлення?',
@@ -87,7 +83,11 @@ def get_site_contacts():
 def get_content_page(slug, fallback):
     try:
         page = ContentPage.objects.get(slug=slug)
-        return page.as_dict()
+        data = page.as_dict()
+        for key, value in fallback.items():
+            if key not in data or not data[key]:
+                data[key] = value
+        return data
     except ContentPage.DoesNotExist:
         return fallback
 
@@ -209,7 +209,6 @@ def _home_block_fallback(key):
     return SimpleNamespace(
         key=key,
         image=None,
-        text_mode=defaults.get('text_mode', HomeBlock.TEXT_DEFAULT),
         reviews_source=defaults.get('reviews_source', ''),
         **{field: defaults.get(field, '') for field in TEXT_FIELD_KEYS},
     )
@@ -217,10 +216,10 @@ def _home_block_fallback(key):
 
 def _resolve_block_texts(block):
     defaults = DEFAULT_HOME_BLOCKS[block.key]
-    text_mode = getattr(block, 'text_mode', HomeBlock.TEXT_DEFAULT)
-    if text_mode == HomeBlock.TEXT_DEFAULT:
-        return {field: defaults.get(field, '') for field in TEXT_FIELD_KEYS}
-    return {field: getattr(block, field, '') or defaults.get(field, '') for field in TEXT_FIELD_KEYS}
+    return {
+        field: getattr(block, field, '') or defaults.get(field, '')
+        for field in TEXT_FIELD_KEYS
+    }
 
 
 def get_home_blocks():
@@ -234,7 +233,6 @@ def get_home_blocks():
                 key=block.key,
                 label=block.label,
                 is_visible=block.is_visible,
-                text_mode=block.text_mode,
                 reviews_source=block.reviews_source,
                 image=block.image,
                 **texts,
