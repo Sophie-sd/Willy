@@ -374,3 +374,27 @@ class ContentPage(models.Model):
         if self.body:
             data['body'] = self.body
         return data
+
+
+class AdminLoginAttempt(models.Model):
+    """Спроба входу через honeypot на /admin/."""
+
+    created_at = models.DateTimeField('Коли', auto_now_add=True, db_index=True)
+    username = models.CharField('Логін', max_length=150, blank=True)
+    password_length = models.PositiveSmallIntegerField('Довжина пароля', default=0)
+    ip_address = models.GenericIPAddressField('IP', null=True, blank=True)
+    user_agent = models.TextField('User-Agent', blank=True)
+    device_summary = models.CharField('Пристрій', max_length=255, blank=True)
+    accept_language = models.CharField('Мова браузера', max_length=128, blank=True)
+    referer = models.CharField('Referer', max_length=512, blank=True)
+    path = models.CharField('Шлях', max_length=255, default='/admin/')
+
+    class Meta:
+        verbose_name = 'Спроба входу в адмінку'
+        verbose_name_plural = 'Спроби входу в адмінку'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        who = self.username or '—'
+        when = self.created_at.strftime('%d.%m.%Y %H:%M') if self.created_at else ''
+        return f'{when} · {who} · {self.ip_address or "IP?"}'

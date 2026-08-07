@@ -13,8 +13,8 @@
       <a href="?page={{ page|add:'-1' }}&sort={{ current_sort }}{% if filter_category %}&category={{ filter_category }}{% endif %}{% if filter_on_sale %}&on_sale=1{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
          class="catalog-pagination__btn"
          hx-get="{{ request.path }}?page={{ page|add:'-1' }}&sort={{ current_sort }}{% if filter_category %}&category={{ filter_category }}{% endif %}{% if filter_on_sale %}&on_sale=1{% endif %}{% if filter_price_min %}&price_min={{ filter_price_min }}{% endif %}{% if filter_price_max %}&price_max={{ filter_price_max }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
-         hx-target="#catalog-results"
-         hx-select="#catalog-results"
+         hx-target="#catalog-main"
+         hx-select="#catalog-main"
          hx-push-url="true">
         ← Назад
       </a>
@@ -28,8 +28,8 @@
       <a href="?page={{ page|add:'1' }}&sort={{ current_sort }}"
          class="catalog-pagination__btn"
          hx-get="{{ request.path }}?page={{ page|add:'1' }}&sort={{ current_sort }}{% if filter_category %}&category={{ filter_category }}{% endif %}{% if filter_on_sale %}&on_sale=1{% endif %}{% if filter_price_min %}&price_min={{ filter_price_min }}{% endif %}{% if filter_price_max %}&price_max={{ filter_price_max }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
-         hx-target="#catalog-results"
-         hx-select="#catalog-results"
+         hx-target="#catalog-main"
+         hx-select="#catalog-main"
          hx-push-url="true">
         Далі →
       </a>

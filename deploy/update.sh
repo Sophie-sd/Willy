@@ -27,4 +27,4 @@ echo "==> Verifying unfold..."
 docker compose exec -T web python -c "import unfold; print('unfold', unfold.__version__)"
 docker compose exec -T web python manage.py check
 
-echo "==> Done. Open /admin/ in browser (hard refresh)."
+echo "==> Done. Real admin path is ADMIN_URL from .env (default /willi-ops-k8m2/). Honeypot: /admin/"

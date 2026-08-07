@@ -100,7 +100,7 @@ def _catalog_context(request, page_title, page_subtitle='', breadcrumbs=None, ba
 
 def _render_catalog(request, **context):
     template = (
-        'catalog/partials/product_grid.html'
+        'catalog/partials/catalog_main.html'
         if request.headers.get('HX-Request')
         else 'catalog/product_list.html'
     )

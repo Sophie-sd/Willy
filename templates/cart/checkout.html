@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/checkout-np.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,12 +14,29 @@
     <h1 class="cart-page__title">Оформлення замовлення</h1>
 
     <div class="checkout-layout">
-      <form method="post" class="checkout-form" novalidate>
+      <form
+        method="post"
+        class="checkout-form"
+        novalidate
+        data-np-checkout
+        data-np-configured="{{ np_configured|yesno:'true,false' }}"
+        data-np-cities-url="{% url 'cart:np_cities' %}"
+        data-np-warehouses-url="{% url 'cart:np_warehouses' %}"
+        data-np-streets-url="{% url 'cart:np_streets' %}"
+        data-method-warehouse="nova_poshta"
+        data-method-address="nova_poshta_address"
+      >
         {% csrf_token %}
 
         {% if form.non_field_errors %}
         <div class="checkout-form__errors" role="alert">
           {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        {% if not np_configured %}
+        <div class="checkout-form__errors" role="alert">
+          Автопошук Нової Пошти тимчасово недоступний. Перевірте API-ключ на сервері.
         </div>
         {% endif %}
 
@@ -38,18 +56,53 @@
         </fieldset>
 
         <fieldset class="checkout-form__section">
-          <legend class="checkout-form__legend">Доставка</legend>
-          {% for field in form %}
-            {% if field.name in 'delivery_method delivery_city delivery_address comment' %}
-            <div class="checkout-field">
-              <label class="checkout-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field }}
-              {% if field.errors %}
-              <p class="checkout-field__error">{{ field.errors.0 }}</p>
-              {% endif %}
-            </div>
+          <legend class="checkout-form__legend">Доставка Новою Поштою</legend>
+
+          <div class="checkout-field">
+            <label class="checkout-field__label" for="{{ form.delivery_method.id_for_label }}">{{ form.delivery_method.label }}</label>
+            {{ form.delivery_method }}
+            {% if form.delivery_method.errors %}
+            <p class="checkout-field__error">{{ form.delivery_method.errors.0 }}</p>
             {% endif %}
-          {% endfor %}
+          </div>
+
+          <div class="checkout-field checkout-field--suggest">
+            <label class="checkout-field__label" for="{{ form.delivery_city.id_for_label }}">{{ form.delivery_city.label }}</label>
+            {{ form.delivery_city }}
+            {{ form.city_ref }}
+            {{ form.settlement_ref }}
+            <ul class="np-suggest" id="np-city-suggest" hidden role="listbox"></ul>
+            {% if form.delivery_city.errors %}
+            <p class="checkout-field__error">{{ form.delivery_city.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="checkout-field checkout-field--suggest" data-np-warehouse-wrap>
+            <label class="checkout-field__label" for="{{ form.delivery_address.id_for_label }}" data-np-address-label>
+              {{ form.delivery_address.label }}
+            </label>
+            {{ form.delivery_address }}
+            <ul class="np-suggest" id="np-secondary-suggest" hidden role="listbox"></ul>
+            {% if form.delivery_address.errors %}
+            <p class="checkout-field__error">{{ form.delivery_address.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="checkout-field" data-np-house-wrap hidden>
+            <label class="checkout-field__label" for="{{ form.house_number.id_for_label }}">{{ form.house_number.label }}</label>
+            {{ form.house_number }}
+            {% if form.house_number.errors %}
+            <p class="checkout-field__error">{{ form.house_number.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="checkout-field">
+            <label class="checkout-field__label" for="{{ form.comment.id_for_label }}">{{ form.comment.label }}</label>
+            {{ form.comment }}
+            {% if form.comment.errors %}
+            <p class="checkout-field__error">{{ form.comment.errors.0 }}</p>
+            {% endif %}
+          </div>
         </fieldset>
 
         <button type="submit" class="btn btn--primary checkout-form__submit">
@@ -78,4 +131,8 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/checkout-np.js' %}" defer></script>
 {% endblock %}

@@ -42,3 +42,15 @@ def pending_reviews_badge(request):
     from core.models import Review
     count = Review.objects.filter(is_published=False).count()
     return str(count) if count else ''
+
+
+def admin_probe_badge(request):
+    from datetime import timedelta
+
+    from django.utils import timezone
+
+    from core.models import AdminLoginAttempt
+
+    since = timezone.now() - timedelta(hours=24)
+    count = AdminLoginAttempt.objects.filter(created_at__gte=since).count()
+    return str(count) if count else ''

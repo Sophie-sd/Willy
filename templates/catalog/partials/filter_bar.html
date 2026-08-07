@@ -4,8 +4,8 @@
     <a href="{% url 'catalog:product_list' %}"
        class="catalog-filters__circle{% if not filter_category %} is-active{% endif %}"
        hx-get="{% url 'catalog:product_list' %}"
-       hx-target="#catalog-results"
-       hx-select="#catalog-results"
+       hx-target="#catalog-main"
+       hx-select="#catalog-main"
        hx-push-url="true">
       <div class="catalog-filters__circle-img catalog-filters__circle-img--all">
         <img src="{% static 'images/placeholders/all.jpg' %}" alt="Усі" width="400" height="400" loading="lazy">
@@ -16,8 +16,8 @@
     <a href="{{ cat.get_absolute_url }}"
        class="catalog-filters__circle{% if filter_category == cat.slug %} is-active{% endif %}"
        hx-get="{{ cat.get_absolute_url }}"
-       hx-target="#catalog-results"
-       hx-select="#catalog-results"
+       hx-target="#catalog-main"
+       hx-select="#catalog-main"
        hx-push-url="true">
       <div class="catalog-filters__circle-img">
         {% if cat.image %}
@@ -43,8 +43,8 @@
         aria-label="Сортування"
         hx-get="{{ request.path }}"
         hx-include="[name='on_sale'], [name='price_min'], [name='price_max'], [name='q']"
-        hx-target="#catalog-results"
-        hx-select="#catalog-results"
+        hx-target="#catalog-main"
+        hx-select="#catalog-main"
         hx-push-url="true"
       >
         <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Новинки</option>
@@ -59,8 +59,8 @@
     class="catalog-filters-panel"
     data-filter-panel
     hx-get="{{ request.path }}"
-    hx-target="#catalog-results"
-    hx-select="#catalog-results"
+    hx-target="#catalog-main"
+    hx-select="#catalog-main"
     hx-push-url="true"
     hx-trigger="change delay:300ms"
   >

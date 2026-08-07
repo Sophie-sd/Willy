@@ -10,6 +10,7 @@ from core.content_services import is_google_reviews_configured
 from core.admin_forms import ContentPageAdminForm, HomeBlockAdminForm
 
 from .models import (
+    AdminLoginAttempt,
     ContentPage,
     DeliveryItem,
     DeliverySection,
@@ -305,3 +306,25 @@ class ContentPageAdmin(ModelAdmin):
         if db_field.name == 'body':
             kwargs['widget'] = TinyMCE()
         return super().formfield_for_dbfield(db_field, request, **kwargs)
+
+
+@admin.register(AdminLoginAttempt)
+class AdminLoginAttemptAdmin(ModelAdmin):
+    list_display = (
+        'created_at', 'username', 'ip_address',
+        'device_summary', 'password_length',
+    )
+    list_filter = ('created_at', 'device_summary')
+    search_fields = ('username', 'ip_address', 'user_agent', 'device_summary')
+    readonly_fields = (
+        'created_at', 'username', 'password_length', 'ip_address',
+        'user_agent', 'device_summary', 'accept_language', 'referer', 'path',
+    )
+    ordering = ('-created_at',)
+    date_hierarchy = 'created_at'
+
+    def has_add_permission(self, request) -> bool:
+        return False
+
+    def has_change_permission(self, request, obj=None) -> bool:
+        return False

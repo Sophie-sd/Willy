@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="{% static 'css/honeypot-admin.css' %}">
+</head>
+<body class="hp-admin">
+  <div class="hp-admin__wrap">
+    <header class="hp-admin__header">
+      <img
+        class="hp-admin__logo"
+        src="{% static 'images/logo-willi.png' %}"
+        alt="WILLI"
+        width="120"
+        height="40"
+      >
+      <h1 class="hp-admin__title">Адміністрування сайту</h1>
+    </header>
+
+    <form class="hp-admin__form" method="post" action="" autocomplete="off" novalidate>
+      {% csrf_token %}
+      <div class="hp-admin__field">
+        <label class="hp-admin__label" for="id_username">Імʼя користувача</label>
+        <input
+          class="hp-admin__input"
+          type="text"
+          name="username"
+          id="id_username"
+          autocapitalize="none"
+          autocomplete="username"
+          maxlength="150"
+          required
+        >
+      </div>
+      <div class="hp-admin__field">
+        <label class="hp-admin__label" for="id_password">Пароль</label>
+        <input
+          class="hp-admin__input"
+          type="password"
+          name="password"
+          id="id_password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+      <div class="hp-admin__actions">
+        <button class="hp-admin__submit" type="submit">Увійти</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

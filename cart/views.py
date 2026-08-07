@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 
 from catalog.models import Product
 from cart.forms import CheckoutForm
-from orders.models import Order
+from orders.nova_poshta import is_configured
 from orders.services import create_order_from_cart
 
 from .cart import Cart
@@ -41,6 +41,7 @@ def checkout(request):
         'form': form,
         'cart_items': cart_items,
         'cart_total': cart.get_total_price(),
+        'np_configured': is_configured(),
     })
 
 

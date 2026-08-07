@@ -22,17 +22,26 @@ class Order(models.Model):
     ]
 
     DELIVERY_NOVA = 'nova_poshta'
-    DELIVERY_UKR = 'ukrposhta'
+    DELIVERY_NOVA_ADDRESS = 'nova_poshta_address'
+    DELIVERY_UKR = 'ukrposhta'  # legacy orders only
+
     DELIVERY_CHOICES = [
-        (DELIVERY_NOVA, 'Нова Пошта'),
-        (DELIVERY_UKR, 'Укрпошта'),
+        (DELIVERY_NOVA, 'Нова Пошта — відділення'),
+        (DELIVERY_NOVA_ADDRESS, 'Нова Пошта — адресна доставка'),
+    ]
+    DELIVERY_CHOICES_ALL = DELIVERY_CHOICES + [
+        (DELIVERY_UKR, 'Укрпошта (архів)'),
     ]
 
     number = models.CharField('Номер', max_length=32, unique=True, editable=False)
     customer_name = models.CharField('Імʼя', max_length=128)
     phone = models.CharField('Телефон', max_length=32)
     email = models.EmailField('Email', blank=True)
-    delivery_method = models.CharField('Доставка', max_length=32, choices=DELIVERY_CHOICES)
+    delivery_method = models.CharField(
+        'Доставка',
+        max_length=32,
+        choices=DELIVERY_CHOICES_ALL,
+    )
     delivery_city = models.CharField('Місто', max_length=128)
     delivery_address = models.CharField('Адреса / відділення', max_length=255)
     comment = models.TextField('Коментар', blank=True)

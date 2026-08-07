@@ -4,10 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import JsonResponse
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.decorators.http import require_GET
 
 from catalog import views as catalog_views
+from core.honeypot import admin_honeypot
 
 
 @require_GET
@@ -16,7 +17,8 @@ def healthz(request):
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
+    re_path(r'^admin(?:/.*)?$', admin_honeypot, name='admin_honeypot'),
     path('tinymce/', include('tinymce.urls')),
     path('healthz/', healthz, name='healthz'),
     path('', include('core.urls')),

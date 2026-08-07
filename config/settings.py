@@ -31,6 +31,10 @@ if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
 IS_RENDER = bool(RENDER_EXTERNAL_HOSTNAME)
 IS_PRODUCTION = not DEBUG
 
+# Real admin path (honeypot stays at /admin/). Trailing slash enforced.
+_admin_url = os.environ.get('ADMIN_URL', 'willi-ops-k8m2').strip().strip('/')
+ADMIN_URL = f'{_admin_url}/' if _admin_url else 'willi-ops-k8m2/'
+
 INSTALLED_APPS = [
     'unfold',
     'unfold.contrib.filters',

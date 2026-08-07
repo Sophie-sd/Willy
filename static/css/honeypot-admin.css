@@ -1,0 +1,110 @@
+.hp-admin {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #f0f0f0;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+}
+
+.hp-admin__wrap {
+  width: 100%;
+  max-width: 400px;
+}
+
+.hp-admin__header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.hp-admin__logo {
+  display: inline-block;
+  height: 40px;
+  width: auto;
+  margin-bottom: 12px;
+}
+
+.hp-admin__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #333;
+}
+
+.hp-admin__form {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 24px 28px 28px;
+  box-sizing: border-box;
+}
+
+.hp-admin__field {
+  margin-bottom: 16px;
+}
+
+.hp-admin__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.hp-admin__input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 16px;
+  color: #333;
+  background: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.hp-admin__input:focus {
+  outline: 2px solid #79aec8;
+  outline-offset: 0;
+  border-color: #79aec8;
+}
+
+.hp-admin__actions {
+  margin-top: 20px;
+}
+
+.hp-admin__submit {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: #417690;
+  color: #fff;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hp-admin__submit:hover,
+.hp-admin__submit:focus {
+  background: #205067;
+}
+
+@media (min-width: 768px) {
+  .hp-admin__form {
+    padding: 28px 32px 32px;
+  }
+}

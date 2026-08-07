@@ -125,7 +125,7 @@ class Command(BaseCommand):
                 },
                 {
                     'title': 'Доставка по Україні',
-                    'subtitle': 'Нова Пошта та Укрпошта. Відправляємо щодня з 8:00 до 19:00',
+                    'subtitle': 'Нова Пошта. Відправляємо щодня з 8:00 до 19:00',
                     'cta_text': 'Детальніше',
                     'cta_url': '/delivery/',
                     'image': 'images/hero/slide-delivery-wide.jpg',

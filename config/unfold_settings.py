@@ -1,9 +1,15 @@
 from django.templatetags.static import static
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 
 def _admin_logo(request):
     return static('images/logo-willi.png')
+
+
+def _content_page_admin_link(slug):
+    def _link(_request):
+        return f"{reverse('admin:core_contentpage_changelist')}?slug={slug}"
+    return _link
 
 
 def _favicons(request):
@@ -94,7 +100,7 @@ UNFOLD = {
                     {
                         'title': 'Заголовок сторінки',
                         'icon': 'local_offer',
-                        'link': '/admin/core/contentpage/?slug=promotions',
+                        'link': _content_page_admin_link('promotions'),
                     },
                 ],
             },
@@ -105,7 +111,7 @@ UNFOLD = {
                     {
                         'title': 'Заголовок сторінки',
                         'icon': 'local_shipping',
-                        'link': '/admin/core/contentpage/?slug=delivery',
+                        'link': _content_page_admin_link('delivery'),
                     },
                     {
                         'title': 'Кроки доставки',
@@ -121,7 +127,7 @@ UNFOLD = {
                     {
                         'title': 'Заголовок сторінки',
                         'icon': 'article',
-                        'link': '/admin/core/contentpage/?slug=faq',
+                        'link': _content_page_admin_link('faq'),
                     },
                     {
                         'title': 'Питання та відповіді',
@@ -144,6 +150,18 @@ UNFOLD = {
                         'icon': 'reviews',
                         'link': reverse_lazy('admin:core_review_changelist'),
                         'badge': 'core.dashboard.pending_reviews_badge',
+                    },
+                ],
+            },
+            {
+                'title': 'Безпека',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Спроби входу (/admin)',
+                        'icon': 'security',
+                        'link': reverse_lazy('admin:core_adminloginattempt_changelist'),
+                        'badge': 'core.dashboard.admin_probe_badge',
                     },
                 ],
             },
