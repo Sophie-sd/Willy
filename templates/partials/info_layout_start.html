@@ -1,3 +1,4 @@
+{% load html_extras %}
 <div class="info-page">
   {% include 'partials/breadcrumbs.html' %}
 
@@ -25,3 +26,6 @@
 
   <div class="info-page__body">
     <div class="container">
+      {% if page.body %}
+      <div class="info-page__richtext rich-html">{{ page.body|sanitize_html }}</div>
+      {% endif %}

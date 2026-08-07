@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from core.html_sanitize import sanitize_html
+
 
 class ProductQuerySet(models.QuerySet):
     def sale_active(self):
@@ -102,6 +104,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.description = sanitize_html(self.description)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         from django.urls import reverse

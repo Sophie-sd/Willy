@@ -348,6 +348,11 @@ class ContentPage(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        from core.html_sanitize import sanitize_html
+        self.body = sanitize_html(self.body)
+        super().save(*args, **kwargs)
+
     def as_dict(self):
         data = {
             'title': self.title,
@@ -366,4 +371,6 @@ class ContentPage(models.Model):
             data['note'] = self.extra_data['note']
         if self.extra_data:
             data.update(self.extra_data)
+        if self.body:
+            data['body'] = self.body
         return data

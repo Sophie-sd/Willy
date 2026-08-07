@@ -141,3 +141,49 @@
   color: var(--color-ink-muted);
   font-size: 1.1rem;
 }
+
+/* Shared styles for sanitized TinyMCE HTML */
+.rich-html > *:first-child {
+  margin-top: 0;
+}
+
+.rich-html > *:last-child {
+  margin-bottom: 0;
+}
+
+.rich-html p {
+  margin: 0 0 0.75em;
+}
+
+.rich-html ul,
+.rich-html ol {
+  margin: 0 0 0.75em;
+  padding-left: 1.25em;
+}
+
+.rich-html li {
+  margin-bottom: 0.35em;
+}
+
+.rich-html a {
+  color: var(--color-accent, #5ABD28);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-html h2,
+.rich-html h3,
+.rich-html h4 {
+  font-family: var(--font-serif);
+  color: var(--color-ink);
+  margin: 1em 0 0.5em;
+  line-height: 1.3;
+}
+
+.rich-html blockquote {
+  margin: 0 0 0.75em;
+  padding-left: 1em;
+  border-left: 3px solid var(--color-border, #e5e0d8);
+  color: var(--color-ink-muted);
+}
+

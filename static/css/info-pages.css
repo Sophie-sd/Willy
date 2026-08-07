@@ -89,9 +89,17 @@ body:has(.info-page) .header {
   padding: 36px 0 0;
 }
 
+.info-page__richtext {
+  margin-bottom: 32px;
+}
+
 @media (min-width: 768px) {
   .info-page__body {
     padding-top: 48px;
+  }
+
+  .info-page__richtext {
+    margin-bottom: 40px;
   }
 }
 

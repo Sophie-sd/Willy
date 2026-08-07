@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static catalog_tags %}
+{% load static catalog_tags html_extras %}
 
 {% block title %}{{ product.name }} — WILLI{% endblock %}
 
@@ -45,7 +45,7 @@
         </div>
 
         {% if product.description %}
-        <div class="product-detail__description">{{ product.description }}</div>
+        <div class="product-detail__description rich-html">{{ product.description|sanitize_html }}</div>
         {% endif %}
 
         <div class="product-detail__actions">
