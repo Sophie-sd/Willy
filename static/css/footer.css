@@ -241,11 +241,49 @@
   font-size: clamp(0.8125rem, 2.2vw, 0.875rem);
 }
 
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.footer__legal-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.62);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--transition-fast);
+}
+
+.footer__legal-link:hover,
+.footer__legal-link:focus-visible {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 @media (min-width: 768px) {
   .footer__bottom {
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 10px 16px;
+  }
+
+  .footer__legal {
+    order: 0;
+  }
+
+  .footer__legal-link {
+    min-height: 0;
+    padding: 2px 0;
+    font-size: 0.6875rem;
   }
 }
 

@@ -154,6 +154,22 @@ UNFOLD = {
                 ],
             },
             {
+                'title': 'Юридичні',
+                'collapsible': True,
+                'items': [
+                    {
+                        'title': 'Публічна оферта',
+                        'icon': 'gavel',
+                        'link': _content_page_admin_link('offer'),
+                    },
+                    {
+                        'title': 'Конфіденційність',
+                        'icon': 'policy',
+                        'link': _content_page_admin_link('privacy'),
+                    },
+                ],
+            },
+            {
                 'title': 'Безпека',
                 'collapsible': True,
                 'items': [

@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from catalog.models import AnimalCategory, Product
 from core.content_services import (
     get_contacts_page,
+    get_content_page,
     get_delivery_page,
     get_delivery_sections,
     get_faq_page,
@@ -14,6 +15,12 @@ from core.content_services import (
     get_site_contacts,
 )
 from core.models import HeroSlide, HomeBlock
+from core.page_content import OFFER_PAGE, PRIVACY_PAGE
+
+LEGAL_PAGE_FALLBACKS = {
+    'offer': OFFER_PAGE,
+    'privacy': PRIVACY_PAGE,
+}
 
 
 def home(request):
@@ -77,3 +84,14 @@ def contacts_legacy_redirect(request):
 
 def reviews_redirect(request):
     return redirect('faq', permanent=True)
+
+
+def content_page(request, slug):
+    fallback = LEGAL_PAGE_FALLBACKS.get(slug)
+    if fallback is None:
+        return redirect('home')
+    page = get_content_page(slug, fallback)
+    return render(request, 'core/content_page.html', {
+        'page': page,
+        'breadcrumbs': [{'label': page['title']}],
+    })

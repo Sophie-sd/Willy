@@ -6,6 +6,8 @@ from core.page_content import (
     CONTACTS_PAGE,
     DELIVERY_PAGE,
     FAQ_PAGE,
+    OFFER_PAGE,
+    PRIVACY_PAGE,
     PROMOTIONS_PAGE,
     REVIEWS,
 )
@@ -15,9 +17,11 @@ CONTENT_PAGE_DEFAULTS = {
     'delivery': DELIVERY_PAGE,
     'faq': FAQ_PAGE,
     'contacts': CONTACTS_PAGE,
+    'offer': OFFER_PAGE,
+    'privacy': PRIVACY_PAGE,
 }
 
-CONTENT_PAGE_TEXT_FIELDS = ('title', 'eyebrow', 'lead', 'empty_text', 'note')
+CONTENT_PAGE_TEXT_FIELDS = ('title', 'eyebrow', 'lead', 'body', 'empty_text', 'note')
 
 CUSTOM_REVIEW_FIELD_NAMES = (
     'custom_review_1_text', 'custom_review_1_author',
@@ -101,6 +105,7 @@ class ContentPageAdminForm(forms.ModelForm):
             'title': page_defaults.get('title', ''),
             'eyebrow': page_defaults.get('eyebrow', ''),
             'lead': page_defaults.get('lead', ''),
+            'body': page_defaults.get('body', ''),
             'empty_text': page_defaults.get('empty_text', ''),
             'note': page_defaults.get('note', ''),
         }
@@ -114,6 +119,7 @@ class ContentPageAdminForm(forms.ModelForm):
                 'title': page_defaults.get('title', ''),
                 'eyebrow': page_defaults.get('eyebrow', ''),
                 'lead': page_defaults.get('lead', ''),
+                'body': page_defaults.get('body', ''),
                 'empty_text': page_defaults.get('empty_text', ''),
                 'note': page_defaults.get('note', ''),
             }

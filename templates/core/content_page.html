@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} — WILLI{% endblock %}
+{% block meta_description %}{{ page.lead }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/info-pages.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/info_layout_start.html' %}
+{% include 'partials/info_layout_end.html' %}
+{% endblock %}

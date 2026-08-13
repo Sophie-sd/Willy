@@ -19,6 +19,8 @@ from core.page_content import (
     DEFAULT_MAP_EMBED_URL,
     DELIVERY_PAGE,
     FAQ_PAGE,
+    OFFER_PAGE,
+    PRIVACY_PAGE,
     PROMOTIONS_PAGE,
     REVIEWS,
 )
@@ -82,6 +84,8 @@ class Command(BaseCommand):
                 'cards': CONTACTS_PAGE['cards'],
                 'map_embed_url': DEFAULT_MAP_EMBED_URL,
             }),
+            ('offer', OFFER_PAGE, {}),
+            ('privacy', PRIVACY_PAGE, {}),
         ]
 
         for slug, source, extra in pages:
@@ -89,7 +93,7 @@ class Command(BaseCommand):
                 'title': source['title'],
                 'eyebrow': source.get('eyebrow', ''),
                 'lead': source.get('lead', ''),
-                'body': '',
+                'body': source.get('body', ''),
                 'extra_data': extra,
             }
             if 'empty_text' in extra:

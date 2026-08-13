@@ -45,6 +45,10 @@
     </div>
     <div class="footer__bottom">
       <span>© {% now "Y" %} {{ site_contacts.name }}</span>
+      <nav class="footer__legal" aria-label="Юридична інформація">
+        <a href="{% url 'offer' %}" class="footer__legal-link">Публічна оферта</a>
+        <a href="{% url 'privacy' %}" class="footer__legal-link">Конфіденційність</a>
+      </nav>
       <p class="footer__credit">
         Зроблено командою
         <a
