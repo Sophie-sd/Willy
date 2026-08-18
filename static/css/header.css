@@ -262,17 +262,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.header__nav::-webkit-scrollbar {
+  display: none;
 }
 
 .header__nav-link {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   height: var(--nav-height);
-  padding: 0 18px;
-  font-size: 0.8125rem;
+  padding: 0 6px;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
   transition: color var(--transition-fast);
 }
 
@@ -284,13 +295,42 @@
 .header__catalog-trigger {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 5px;
   height: var(--nav-height);
-  padding: 0 18px;
-  font-size: 0.8125rem;
+  padding: 0 6px;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 900px) {
+  .header__nav {
+    gap: 8px;
+  }
+
+  .header__nav-link,
+  .header__catalog-trigger {
+    padding: 0 8px;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .header__nav {
+    gap: 12px;
+  }
+
+  .header__nav-link,
+  .header__catalog-trigger {
+    padding: 0 10px;
+    font-size: 0.8125rem;
+    letter-spacing: 0.8px;
+  }
 }
 
 .header__catalog-trigger svg {
@@ -358,11 +398,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  min-height: 44px;
   padding: 15px 14px;
   font-weight: 700;
   font-size: 1.0625rem;
   line-height: 1.35;
   border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
   transition: background var(--transition-fast);
 }
 
@@ -393,35 +435,6 @@
 
 .mobile-drawer__sub-link:hover {
   background: var(--color-lime-pale);
-}
-
-.mobile-drawer__legal {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mobile-drawer__legal-link {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 14px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.35;
-  color: #888;
-  border-radius: 10px;
-  -webkit-tap-highlight-color: transparent;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.mobile-drawer__legal-link:hover,
-.mobile-drawer__legal-link:focus-visible {
-  background: var(--color-lime-pale);
-  color: var(--color-lime-dark);
 }
 
 .mobile-drawer__contact {

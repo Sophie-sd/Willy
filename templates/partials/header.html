@@ -62,6 +62,8 @@
       <a href="{% url 'delivery' %}" class="header__nav-link{% if current_nav == 'delivery' %} is-active{% endif %}">Доставка</a>
       <a href="{% url 'faq' %}" class="header__nav-link{% if current_nav == 'faq' %} is-active{% endif %}">FAQ</a>
       <a href="{% url 'contacts' %}" class="header__nav-link{% if current_nav == 'contacts' %} is-active{% endif %}">Контакти</a>
+      <a href="{% url 'privacy' %}" class="header__nav-link{% if current_nav == 'privacy' %} is-active{% endif %}">Конфіденційність</a>
+      <a href="{% url 'offer' %}" class="header__nav-link{% if current_nav == 'offer' %} is-active{% endif %}">Публічна оферта</a>
     </nav>
     {% include 'partials/mega_menu.html' %}
   </div>
@@ -95,10 +97,8 @@
       <a href="{% url 'delivery' %}" class="mobile-drawer__link" data-drawer-close>Доставка</a>
       <a href="{% url 'faq' %}" class="mobile-drawer__link" data-drawer-close>FAQ</a>
       <a href="{% url 'contacts' %}" class="mobile-drawer__link" data-drawer-close>Контакти</a>
-      <div class="mobile-drawer__legal">
-        <a href="{% url 'offer' %}" class="mobile-drawer__legal-link" data-drawer-close>Публічна оферта</a>
-        <a href="{% url 'privacy' %}" class="mobile-drawer__legal-link" data-drawer-close>Конфіденційність</a>
-      </div>
+      <a href="{% url 'privacy' %}" class="mobile-drawer__link" data-drawer-close>Конфіденційність</a>
+      <a href="{% url 'offer' %}" class="mobile-drawer__link" data-drawer-close>Публічна оферта</a>
     </div>
     <div class="mobile-drawer__contact">
       <a href="tel:{{ site_contacts.phone_href }}" class="mobile-drawer__contact-phone">
