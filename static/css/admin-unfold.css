@@ -1,0 +1,38 @@
+/* Unfold admin — помітніші рамки полів вводу */
+
+input.rounded-default:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="color"]),
+textarea.rounded-default,
+select.rounded-default {
+  border-color: #94a3b8;
+  border-width: 1px;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+input.rounded-default:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="color"]):focus,
+textarea.rounded-default:focus,
+select.rounded-default:focus {
+  border-color: #5abd28;
+}
+
+.dark input.rounded-default:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="color"]),
+.dark textarea.rounded-default,
+.dark select.rounded-default {
+  border-color: #64748b;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.dark input.rounded-default:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="color"]):focus,
+.dark textarea.rounded-default:focus,
+.dark select.rounded-default:focus {
+  border-color: #7dd956;
+}
+
+/* TinyMCE iframe wrapper */
+.tox-tinymce {
+  border-color: #94a3b8;
+  border-width: 1px;
+}
+
+.dark .tox-tinymce {
+  border-color: #64748b;
+}

@@ -42,6 +42,9 @@ UNFOLD = {
     'THEME': 'light',
     'SHOW_VIEW_ON_SITE': True,
     'DASHBOARD_CALLBACK': 'core.dashboard.dashboard_callback',
+    'STYLES': [
+        lambda request: static('css/admin-unfold.css'),
+    ],
     'COLORS': {
         'primary': {
             '50': 'oklch(98% 0.02 142)',
