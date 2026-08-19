@@ -45,6 +45,10 @@ class Command(BaseCommand):
                 'map_lng': contacts['map_lng'],
                 'map_embed_url': DEFAULT_MAP_EMBED_URL,
                 'google_maps_url': DEFAULT_GOOGLE_MAPS_URL,
+                'fop_full_name': 'Дараган Оксана Юріївна',
+                'fop_trade_name': 'ФОП Дараган',
+                'fop_rnokpp': '3058502902',
+                'fop_unzr': '19830927-08140',
             },
         )
         self.stdout.write(self.style.SUCCESS('SiteSettings — ok'))

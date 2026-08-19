@@ -168,6 +168,10 @@ SITE_CONTACTS = {
     'map_embed_url': '',
     'google_maps_url': '',
     'google_place_id': '',
+    'fop_full_name': 'Дараган Оксана Юріївна',
+    'fop_trade_name': 'ФОП Дараган',
+    'fop_rnokpp': '3058502902',
+    'fop_unzr': '19830927-08140',
 }
 
 from config.unfold_settings import TINYMCE_DEFAULT_CONFIG, UNFOLD  # noqa: E402, F401

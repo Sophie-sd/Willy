@@ -62,6 +62,27 @@ class SiteSettings(models.Model):
         max_length=128,
         blank=True,
     )
+    fop_full_name = models.CharField(
+        'Повне імʼя ФОП',
+        max_length=128,
+        default='Дараган Оксана Юріївна',
+    )
+    fop_trade_name = models.CharField(
+        'Найменування ФОП',
+        max_length=128,
+        default='ФОП Дараган',
+        help_text='Наприклад: ФОП Дараган',
+    )
+    fop_rnokpp = models.CharField(
+        'РНОКПП',
+        max_length=16,
+        default='3058502902',
+    )
+    fop_unzr = models.CharField(
+        'УНЗР',
+        max_length=32,
+        default='19830927-08140',
+    )
 
     class Meta:
         verbose_name = 'Налаштування сайту'
@@ -94,6 +115,10 @@ class SiteSettings(models.Model):
             'map_embed_url': self.map_embed_url,
             'google_maps_url': self.google_maps_url,
             'google_place_id': self.google_place_id,
+            'fop_full_name': self.fop_full_name,
+            'fop_trade_name': self.fop_trade_name,
+            'fop_rnokpp': self.fop_rnokpp,
+            'fop_unzr': self.fop_unzr,
         }
 
 

@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 from django.conf import settings
+from django.utils.html import escape
 
 from core.models import ContentPage, DeliverySection, FaqItem, HomeBlock, Review, SiteSettings
 from core.page_content import (
@@ -71,13 +72,81 @@ TEXT_FIELD_KEYS = (
     'perk_1', 'perk_2', 'perk_3', 'cta_text', 'cta_url',
 )
 
+SELLER_REQUISITES_MARKER = '<!--SELLER_REQUISITES-->'
+
+FOP_DEFAULTS = {
+    'fop_full_name': 'Дараган Оксана Юріївна',
+    'fop_trade_name': 'ФОП Дараган',
+    'fop_rnokpp': '3058502902',
+    'fop_unzr': '19830927-08140',
+}
+
+FOP_FIELD_NAMES = tuple(FOP_DEFAULTS.keys())
+
 
 def get_site_contacts():
     try:
         obj, _ = SiteSettings.objects.get_or_create(pk=1)
         return obj.as_dict()
     except Exception:
-        return settings.SITE_CONTACTS
+        return {**settings.SITE_CONTACTS, **FOP_DEFAULTS}
+
+
+def _seller_contacts(contacts=None):
+    merged = {**FOP_DEFAULTS, **settings.SITE_CONTACTS, **(contacts or get_site_contacts())}
+    return merged
+
+
+def render_seller_requisites_html(contacts=None):
+    data = _seller_contacts(contacts)
+    email = escape(data.get('email', ''))
+    phone = escape(data.get('phone_intl', data.get('phone', '')))
+    return (
+        '<h2>2. Реквізити Продавця</h2>'
+        f'<p><strong>Повне імʼя:</strong> {escape(data["fop_full_name"])}</p>'
+        f'<p><strong>Найменування:</strong> {escape(data["fop_trade_name"])}</p>'
+        f'<p><strong>РНОКПП:</strong> {escape(data["fop_rnokpp"])}</p>'
+        f'<p><strong>УНЗР:</strong> {escape(data["fop_unzr"])}</p>'
+        f'<p><strong>Адреса магазину:</strong> {escape(data.get("address", ""))}</p>'
+        f'<p><strong>Email:</strong> {email}</p>'
+        f'<p><strong>Телефон:</strong> {phone}</p>'
+    )
+
+
+def inject_seller_requisites(body, contacts=None):
+    html = render_seller_requisites_html(contacts)
+    if SELLER_REQUISITES_MARKER in body:
+        return body.replace(SELLER_REQUISITES_MARKER, html)
+
+    import re
+    pattern = r'<h2>2\.\s*Реквізити Продавця</h2>.*?(?=<h2>3\.)'
+    if re.search(pattern, body, flags=re.DOTALL):
+        return re.sub(pattern, html, body, count=1, flags=re.DOTALL)
+    return body
+
+
+def apply_offer_fop_lead(lead, contacts=None):
+    data = _seller_contacts(contacts)
+    trade_name = data.get('fop_trade_name', FOP_DEFAULTS['fop_trade_name'])
+    if not lead:
+        return lead
+    if '{fop_trade_name}' in lead:
+        return lead.replace('{fop_trade_name}', trade_name)
+    return lead.replace('ФОП Дараган', trade_name)
+
+
+def get_offer_page():
+    from core.page_content import OFFER_PAGE
+
+    page = get_content_page('offer', OFFER_PAGE)
+    contacts = get_site_contacts()
+    page = {
+        **page,
+        'lead': apply_offer_fop_lead(page.get('lead', ''), contacts),
+    }
+    if page.get('body'):
+        page['body'] = inject_seller_requisites(page['body'], contacts)
+    return page
 
 
 def get_content_page(slug, fallback):

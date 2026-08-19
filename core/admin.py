@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin, TabularInline
 
-from core.content_services import is_google_reviews_configured
+from core.content_services import DEFAULT_HOME_BLOCKS, FOP_FIELD_NAMES, is_google_reviews_configured
 from core.admin_forms import ContentPageAdminForm, HomeBlockAdminForm
 
 from .models import (
@@ -27,6 +27,13 @@ class SiteSettingsAdmin(ModelAdmin):
     fieldsets = (
         ('Контакти', {
             'fields': ('name', 'phone', 'email', 'address', 'hours'),
+        }),
+        ('Реквізити ФОП', {
+            'fields': FOP_FIELD_NAMES,
+            'description': (
+                'Відображаються у футері під адресою та в розділі '
+                '«Реквізити Продавця» публічної оферти.'
+            ),
         }),
         ('Карта Google', {
             'fields': ('map_embed_url', 'google_maps_url'),
@@ -260,26 +267,36 @@ class ContentPageAdmin(ModelAdmin):
     list_display = ('title', 'slug', 'header_image_preview')
     search_fields = ('title', 'slug', 'lead')
     readonly_fields = ('header_image_preview',)
-    fieldsets = (
-        (None, {
+
+    def get_fieldsets(self, request, obj=None):
+        main = (None, {
             'fields': ('slug', 'title', 'eyebrow', 'lead', 'body'),
             'description': (
                 'У полях уже підставлено поточний текст з сайту — редагуйте напряму. '
                 'Заголовок — до 128 символів. Eyebrow — до 128 символів.'
             ),
-        }),
-        ('Зображення', {
+        })
+        image = ('Зображення', {
             'fields': ('header_image', 'header_image_preview'),
             'description': 'Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ.',
-        }),
-        ('Додатковий текст', {
+        })
+        extra = ('Додатковий текст', {
             'fields': ('empty_text', 'note'),
             'description': (
                 'empty_text — для сторінки «Акції». '
                 'note — підпис внизу сторінки FAQ. Текст можна змінити напряму.'
             ),
-        }),
-    )
+        })
+        fieldsets = [main, image, extra]
+        if obj and obj.slug == 'offer':
+            fieldsets.insert(1, ('Реквізити ФОП', {
+                'fields': FOP_FIELD_NAMES,
+                'description': (
+                    'Ці дані також відображаються у футері сайту. '
+                    'Адреса, email і телефон беруться з розділу «Налаштування сайту → Контакти».'
+                ),
+            }))
+        return fieldsets
 
     def changelist_view(self, request, extra_context=None):
         slug = request.GET.get('slug')

@@ -1,7 +1,7 @@
 from django import forms
 
-from core.content_services import DEFAULT_HOME_BLOCKS, TEXT_FIELD_KEYS
-from core.models import ContentPage, HomeBlock
+from core.content_services import DEFAULT_HOME_BLOCKS, FOP_DEFAULTS, FOP_FIELD_NAMES, TEXT_FIELD_KEYS
+from core.models import ContentPage, HomeBlock, SiteSettings
 from core.page_content import (
     CONTACTS_PAGE,
     DELIVERY_PAGE,
@@ -89,6 +89,27 @@ class HomeBlockAdminForm(forms.ModelForm):
 
 
 class ContentPageAdminForm(forms.ModelForm):
+    fop_full_name = forms.CharField(
+        label='Повне імʼя ФОП',
+        max_length=128,
+        required=False,
+    )
+    fop_trade_name = forms.CharField(
+        label='Найменування ФОП',
+        max_length=128,
+        required=False,
+    )
+    fop_rnokpp = forms.CharField(
+        label='РНОКПП',
+        max_length=16,
+        required=False,
+    )
+    fop_unzr = forms.CharField(
+        label='УНЗР',
+        max_length=32,
+        required=False,
+    )
+
     class Meta:
         model = ContentPage
         fields = '__all__'
@@ -99,17 +120,28 @@ class ContentPageAdminForm(forms.ModelForm):
         if not instance or not instance.slug:
             return
         page_defaults = CONTENT_PAGE_DEFAULTS.get(instance.slug, {})
-        if not page_defaults:
+        if page_defaults:
+            defaults = {
+                'title': page_defaults.get('title', ''),
+                'eyebrow': page_defaults.get('eyebrow', ''),
+                'lead': page_defaults.get('lead', ''),
+                'body': page_defaults.get('body', ''),
+                'empty_text': page_defaults.get('empty_text', ''),
+                'note': page_defaults.get('note', ''),
+            }
+            _apply_field_defaults(self, defaults, CONTENT_PAGE_TEXT_FIELDS, instance)
+
+        if instance.slug != 'offer':
+            for name in FOP_FIELD_NAMES:
+                self.fields.pop(name, None)
             return
-        defaults = {
-            'title': page_defaults.get('title', ''),
-            'eyebrow': page_defaults.get('eyebrow', ''),
-            'lead': page_defaults.get('lead', ''),
-            'body': page_defaults.get('body', ''),
-            'empty_text': page_defaults.get('empty_text', ''),
-            'note': page_defaults.get('note', ''),
-        }
-        _apply_field_defaults(self, defaults, CONTENT_PAGE_TEXT_FIELDS, instance)
+
+        settings_obj = SiteSettings.objects.filter(pk=1).first()
+        fop_defaults = FOP_DEFAULTS.copy()
+        if settings_obj:
+            for name in FOP_FIELD_NAMES:
+                fop_defaults[name] = getattr(settings_obj, name, '') or fop_defaults[name]
+        _apply_field_defaults(self, fop_defaults, FOP_FIELD_NAMES)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -128,4 +160,14 @@ class ContentPageAdminForm(forms.ModelForm):
                     setattr(instance, field, fallback)
         if commit:
             instance.save()
+
+        if instance.slug == 'offer':
+            settings_obj, _ = SiteSettings.objects.get_or_create(pk=1)
+            for name in FOP_FIELD_NAMES:
+                value = self.cleaned_data.get(name, '')
+                if not value:
+                    value = FOP_DEFAULTS.get(name, '')
+                setattr(settings_obj, name, value)
+            settings_obj.save()
+
         return instance

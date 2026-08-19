@@ -27,6 +27,36 @@
         <p class="footer__tagline">ZOO МАГАЗИН у Києві</p>
         <p class="footer__desc">Корм, іграшки та аксесуари для ваших улюбленців.</p>
         <a href="{% url 'contacts' %}" class="footer__address">{{ site_contacts.address }}</a>
+        <dl class="footer__fop">
+          <div class="footer__fop-row">
+            <dt class="footer__fop-label">Повне імʼя</dt>
+            <dd class="footer__fop-value">{{ site_contacts.fop_full_name }}</dd>
+          </div>
+          <div class="footer__fop-row">
+            <dt class="footer__fop-label">Найменування</dt>
+            <dd class="footer__fop-value">{{ site_contacts.fop_trade_name }}</dd>
+          </div>
+          <div class="footer__fop-row">
+            <dt class="footer__fop-label">РНОКПП</dt>
+            <dd class="footer__fop-value">{{ site_contacts.fop_rnokpp }}</dd>
+          </div>
+          <div class="footer__fop-row">
+            <dt class="footer__fop-label">УНЗР</dt>
+            <dd class="footer__fop-value">{{ site_contacts.fop_unzr }}</dd>
+          </div>
+          <div class="footer__fop-row">
+            <dt class="footer__fop-label">Email</dt>
+            <dd class="footer__fop-value">
+              <a href="mailto:{{ site_contacts.email }}" class="footer__fop-link">{{ site_contacts.email }}</a>
+            </dd>
+          </div>
+          <div class="footer__fop-row">
+            <dt class="footer__fop-label">Телефон</dt>
+            <dd class="footer__fop-value">
+              <a href="tel:{{ site_contacts.phone_href }}" class="footer__fop-link">{{ site_contacts.phone_intl }}</a>
+            </dd>
+          </div>
+        </dl>
       </div>
 
       <p class="footer__hours">{{ site_contacts.hours }}</p>

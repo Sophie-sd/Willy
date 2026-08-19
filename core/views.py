@@ -10,6 +10,7 @@ from core.content_services import (
     get_google_maps_url,
     get_home_blocks,
     get_map_embed_url,
+    get_offer_page,
     get_promotions_page,
     get_reviews_for_block,
     get_site_contacts,
@@ -90,7 +91,10 @@ def content_page(request, slug):
     fallback = LEGAL_PAGE_FALLBACKS.get(slug)
     if fallback is None:
         return redirect('home')
-    page = get_content_page(slug, fallback)
+    if slug == 'offer':
+        page = get_offer_page()
+    else:
+        page = get_content_page(slug, fallback)
     return render(request, 'core/content_page.html', {
         'page': page,
         'breadcrumbs': [{'label': page['title']}],
