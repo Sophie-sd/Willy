@@ -22,7 +22,7 @@
       <button class="catalog-pagination__btn" disabled>← Назад</button>
       {% endif %}
 
-      <span class="catalog-pagination__btn" style="border:none;">Стор. {{ page }}</span>
+      <span class="catalog-pagination__btn catalog-pagination__current">Сторінка {{ page }}</span>
 
       {% if has_next %}
       <a href="?page={{ page|add:'1' }}&sort={{ current_sort }}"

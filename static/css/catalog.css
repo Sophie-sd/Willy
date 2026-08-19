@@ -225,6 +225,17 @@
   cursor: not-allowed;
 }
 
+.catalog-pagination__current {
+  border: none;
+  background: transparent;
+  cursor: default;
+}
+
+.catalog-pagination__current:hover {
+  border: none;
+  background: transparent;
+}
+
 .catalog-empty {
   text-align: center;
   padding: 64px 24px;

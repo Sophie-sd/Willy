@@ -161,7 +161,26 @@
   padding-left: 1.25em;
 }
 
+.rich-html ul {
+  list-style-type: disc;
+}
+
+.rich-html ol {
+  list-style-type: decimal;
+}
+
+.rich-html ul ul {
+  list-style-type: circle;
+  margin-top: 0.35em;
+}
+
+.rich-html ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.35em;
+}
+
 .rich-html li {
+  display: list-item;
   margin-bottom: 0.35em;
 }
 

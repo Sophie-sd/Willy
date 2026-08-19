@@ -114,15 +114,25 @@ def render_seller_requisites_html(contacts=None):
 
 
 def inject_seller_requisites(body, contacts=None):
+    import re
+
     html = render_seller_requisites_html(contacts)
+    if not body:
+        return html
+
     if SELLER_REQUISITES_MARKER in body:
         return body.replace(SELLER_REQUISITES_MARKER, html)
 
-    import re
-    pattern = r'<h2>2\.\s*Реквізити Продавця</h2>.*?(?=<h2>3\.)'
-    if re.search(pattern, body, flags=re.DOTALL):
-        return re.sub(pattern, html, body, count=1, flags=re.DOTALL)
-    return body
+    existing = r'<h2>2\.\s*Реквізити Продавця</h2>.*?(?=<h2>3\.)'
+    if re.search(existing, body, flags=re.DOTALL):
+        return re.sub(existing, html, body, count=1, flags=re.DOTALL)
+
+    # Маркер зникає після sanitize_html у адмінці — вставляємо перед розділом 3
+    before_section_3 = r'(?=<h2>3\.)'
+    if re.search(before_section_3, body):
+        return re.sub(before_section_3, html, body, count=1)
+
+    return f'{body}{html}'
 
 
 def apply_offer_fop_lead(lead, contacts=None):
@@ -144,8 +154,8 @@ def get_offer_page():
         **page,
         'lead': apply_offer_fop_lead(page.get('lead', ''), contacts),
     }
-    if page.get('body'):
-        page['body'] = inject_seller_requisites(page['body'], contacts)
+    body = page.get('body') or OFFER_PAGE.get('body', '')
+    page['body'] = inject_seller_requisites(body, contacts)
     return page
 
 
