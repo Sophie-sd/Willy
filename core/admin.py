@@ -24,6 +24,7 @@ from .models import (
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ModelAdmin):
+    compressed_fields = False
     fieldsets = (
         ('Контакти', {
             'fields': ('name', 'phone', 'email', 'address', 'hours'),
@@ -267,8 +268,15 @@ class ContentPageAdmin(ModelAdmin):
     list_display = ('title', 'slug', 'header_image_preview')
     search_fields = ('title', 'slug', 'lead')
     readonly_fields = ('header_image_preview',)
+    compressed_fields = False
+
+    _SLUGS_WITH_IMAGE = frozenset({'promotions', 'delivery', 'faq', 'contacts'})
+    _SLUGS_WITH_EMPTY_TEXT = frozenset({'promotions'})
+    _SLUGS_WITH_NOTE = frozenset({'faq'})
 
     def get_fieldsets(self, request, obj=None):
+        slug = obj.slug if obj else ''
+
         main = (None, {
             'fields': ('slug', 'title', 'eyebrow', 'lead', 'body'),
             'description': (
@@ -276,20 +284,10 @@ class ContentPageAdmin(ModelAdmin):
                 'Заголовок — до 128 символів. Eyebrow — до 128 символів.'
             ),
         })
-        image = ('Зображення', {
-            'fields': ('header_image', 'header_image_preview'),
-            'description': 'Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ.',
-        })
-        extra = ('Додатковий текст', {
-            'fields': ('empty_text', 'note'),
-            'description': (
-                'empty_text — для сторінки «Акції». '
-                'note — підпис внизу сторінки FAQ. Текст можна змінити напряму.'
-            ),
-        })
-        fieldsets = [main, image, extra]
+        fieldsets = [main]
+
         if obj and obj.slug == 'offer':
-            fieldsets.insert(1, ('Реквізити ФОП', {
+            fieldsets.append(('Реквізити ФОП', {
                 'fields': FOP_FIELD_NAMES,
                 'description': (
                     'Ці дані також відображаються у футері під контактами. '
@@ -297,6 +295,29 @@ class ContentPageAdmin(ModelAdmin):
                     '«Налаштування сайту → Контакти».'
                 ),
             }))
+
+        if slug in self._SLUGS_WITH_IMAGE:
+            fieldsets.append(('Зображення', {
+                'fields': ('header_image', 'header_image_preview'),
+                'description': 'Рекомендовано: 1440×480 px, JPG або WebP, до 1.5 МБ.',
+            }))
+
+        extra_fields = []
+        if slug in self._SLUGS_WITH_EMPTY_TEXT:
+            extra_fields.append('empty_text')
+        if slug in self._SLUGS_WITH_NOTE:
+            extra_fields.append('note')
+        if extra_fields:
+            desc_parts = []
+            if 'empty_text' in extra_fields:
+                desc_parts.append('empty_text — для сторінки «Акції»')
+            if 'note' in extra_fields:
+                desc_parts.append('note — підпис внизу сторінки FAQ')
+            fieldsets.append(('Додатковий текст', {
+                'fields': tuple(extra_fields),
+                'description': '. '.join(desc_parts) + '.',
+            }))
+
         return fieldsets
 
     def changelist_view(self, request, extra_context=None):

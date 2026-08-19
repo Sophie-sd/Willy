@@ -41,6 +41,7 @@
           <span class="footer__contact-label">Пошта</span>
           <a href="mailto:{{ site_contacts.email }}" class="footer__link">{{ site_contacts.email }}</a>
         </div>
+        <div class="footer__fop-divider" aria-hidden="true"></div>
         <dl class="footer__fop">
           <div class="footer__fop-row">
             <dt class="footer__fop-label">Повне імʼя</dt>
@@ -57,18 +58,6 @@
           <div class="footer__fop-row">
             <dt class="footer__fop-label">УНЗР</dt>
             <dd class="footer__fop-value">{{ site_contacts.fop_unzr }}</dd>
-          </div>
-          <div class="footer__fop-row">
-            <dt class="footer__fop-label">Email</dt>
-            <dd class="footer__fop-value">
-              <a href="mailto:{{ site_contacts.email }}" class="footer__fop-link">{{ site_contacts.email }}</a>
-            </dd>
-          </div>
-          <div class="footer__fop-row">
-            <dt class="footer__fop-label">Телефон</dt>
-            <dd class="footer__fop-value">
-              <a href="tel:{{ site_contacts.phone_href }}" class="footer__fop-link">{{ site_contacts.phone_intl }}</a>
-            </dd>
           </div>
         </dl>
       </div>

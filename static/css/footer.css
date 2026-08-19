@@ -178,8 +178,16 @@
   color: var(--color-lime-light);
 }
 
+.footer__fop-divider {
+  width: 40px;
+  height: 1px;
+  margin: 10px 0 10px 12px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
 .footer__fop {
-  margin: 14px 0 0;
+  margin: 0;
+  padding-left: 12px;
   display: grid;
   gap: 4px;
 }
@@ -223,8 +231,14 @@
 }
 
 @media (min-width: 768px) {
+  .footer__fop-divider {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
   .footer__fop {
-    margin-top: 12px;
+    padding-left: 14px;
+    margin-left: auto;
   }
 
   .footer__fop-row {
